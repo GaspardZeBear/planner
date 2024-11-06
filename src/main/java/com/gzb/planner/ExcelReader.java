@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
@@ -27,8 +28,10 @@ public class ExcelReader {
 	@GetMapping("/excelreader")
   @ResponseBody
 	public String index() {
-		ArrayList<PlanningItem> itemList=new ExcelProcessor("Sample.xlsx").getItemList();
-		return(new Planning(itemList).toJson());
+		ExcelProcessor xp=new ExcelProcessor("Sample.xlsx");
+		ArrayList<PlanningItem> itemList=xp.getItemList();
+		HashMap<String,String> colorMap =xp.getColorsMap();
+		return(new Planning(itemList,colorMap).toJson());
 	}
 
 }

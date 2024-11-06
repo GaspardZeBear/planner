@@ -9,9 +9,11 @@ import org.json.simple.JSONObject;
 
 public class Planning {
   private ArrayList<PlanningItem> itemList;
+  private HashMap<String,String> colorsList;
 
-  public Planning(ArrayList<PlanningItem> itemList) {
+  public Planning(ArrayList<PlanningItem> itemList, HashMap<String,String> colorsList) {
     this.itemList=itemList;
+    this.colorsList=colorsList;
   }
 
   public String toJson() {
@@ -45,7 +47,7 @@ public class Planning {
     }
     JSONObject j=new JSONObject();
     j.put("Planning",items);
-    j.put("Colors",new JSONArray());
+    j.put("Colors",new JSONObject(colorsList));
     //return(items.toJSONString());
     return(j.toJSONString());
   }
