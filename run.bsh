@@ -1,1 +1,2 @@
-nohup java -Dserver.tomcat.max-threads=40 -Dspring.mvc.static-path-pattern=/content/** -Dspring.web.resources.static-locations=file:/home/ubu/uglyplanner -Dserver.tomcat.max-connections=40 -jar  /home/ubu/planner/target/planner-0.0.1-SNAPSHOT.jar > /dev/null &
+#nohup java -Dserver.tomcat.max-threads=40 -Dspring.mvc.static-path-pattern=/content/** -Dspring.web.resources.static-locations=file:/home/ubu/uglyplanner -Dserver.tomcat.max-connections=40 -jar  /home/ubu/planner/target/planner-0.0.1-SNAPSHOT.jar > /dev/null &
+java -Dserver.tomcat.max-threads=40 -Dserver.tomcat.max-connections=40 -jar  /home/ubu/planner/target/planner-0.0.1-SNAPSHOT.jar 
