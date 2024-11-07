@@ -134,13 +134,19 @@ function generateHtmlTable(table) {
 }
 
 //-------------------------------------------------------------------------------------------------------
-function updateVirtualTableCell(line,when,event) {
+function updateVirtualTableCell(line,event) {
     // some events at same date
+    console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
+    console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
+    when=event["when"]
+    // if virtual table entry <name><suffixed date> already contains an event
+    // must create a new table entry with new name : <name_<num>+><suffixed date>
+    // (<num> Each name has a counter !)
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length > 0 ) {
       let processing = "[" + CTX.getVirtualTable()[line][when]["kind"] + "/" + CTX.getVirtualTable()[line][when]["note"]  + "]";
       processing += "\n&& " + "[" + event["kind"] + "/" + event["note"] + "]";
       let nWhen=JSON.parse(JSON.stringify(CTX.getVirtualTable()[line][when]));
-      nWhen["kind"]="XXX";
+      nWhen["kind"]="Multi";
       nWhen["note"] += processing
       nWhen["processing"]=processing;
       CTX.getVirtualTable()[line][when]=nWhen;
@@ -151,7 +157,7 @@ function updateVirtualTableCell(line,when,event) {
       CTX.getNamesCounter[line] += 1
       let newLine=line+"_"+ CTX.getNamesCounter[line].toString().padStart(2, '0') + '+'
       createVirtualTableLine(newLine)
-      whensVirtualTable(newLine,when,event);
+      whensVirtualTable(newLine,event);
     } else {
       CTX.getVirtualTable()[line][when]=event;
     }
@@ -169,37 +175,45 @@ function isWhenInStartEnd(when) {
 }
 //-------------------------------------------------------------------------------------------------------
 // Suffix A or M
-function updateVirtualTableCellWithSuffix(line,when,event,suffix) {
-  if ( ! isWhenInStartEnd(when) ) {
+function updateVirtualTableCellWithSuffix(line,event,suffix) {
+  console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
+  console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
+  if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
   let nEvent=JSON.parse(JSON.stringify(event));
-  let nWhen=when+suffix;
+  let nWhen=event["when"]+suffix;
   nEvent["date"]=nWhen;
   nEvent["when"]=nWhen;
-  updateVirtualTableCell(line,nWhen,nEvent);
+  updateVirtualTableCell(line,nEvent);
 }
 
 //-------------------------------------------------------------------------------------------------------
-function simpleWhenVirtualTable(line,when,event) {
-  if ( ! isWhenInStartEnd(when) ) {
+// when contains a entire date (ex 2024-11-05)  or entire date with A or M suffix (ex 2024-11-05A)
+function simpleWhenVirtualTable(line,event) {
+  console.log("simpleWhenVirtualTable line " + line)
+  console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
+  if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
   let nEvent=JSON.parse(JSON.stringify(event));
   nEvent["line"]=line;
-  if (when.length == 10) {
-    updateVirtualTableCellWithSuffix(line,when,nEvent,"M");
-    updateVirtualTableCellWithSuffix(line,when,nEvent,"A");
+  console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
+
+  // if entire day (no A or M suffix) 
+  if (event["when"].length == 10) {
+    updateVirtualTableCellWithSuffix(line,event,"M");
+    updateVirtualTableCellWithSuffix(line,event,"A");
   } else {
-    //virtualTable[line][when]=event;
-    nEvent["date"]=when;
-    updateVirtualTableCell(line,when,nEvent);
+    // if A or M suffix
+    nEvent["date"]=event["when"];
+    updateVirtualTableCell(line,event,nEvent);
   }
  }
 
 //-------------------------------------------------------------------------------------------------------
-function multipleWhensVirtualTable(line,when,event) {
-  let whens=when.split("@");
+function multipleWhensVirtualTable(line,event) {
+  let whens=event["when"].split("@");
   let nstart=new Date(whens[0].substring(0,10));
   if ( nstart < new Date(CTX.getStart()) ) {
     nstart = new Date(CTX.getStart())
@@ -217,13 +231,13 @@ function multipleWhensVirtualTable(line,when,event) {
     return
   }
   if ( nstart > new Date(nend)) {
-   console.log("Rejected 3");
+    console.log("Rejected 3");
     return
   }
-  let loop = new Date(nstart);
-  
-  let dates=[];
 
+  // Build an list of dates (suffix A or M) for new events
+  let loop = new Date(nstart);
+  let dates=[];
   while(loop <= nend){
     let day=date2day(loop);
     //console.log(day);
@@ -232,7 +246,8 @@ function multipleWhensVirtualTable(line,when,event) {
     let newDate = loop.setDate(loop.getDate() + 1);
     loop = new Date(newDate);
   }
- //throw new Error('This is not an error. This is just to abort javascript');
+  
+  //throw new Error('This is not an error. This is just to abort javascript');
   if ( whens[0].length == 10 ) {
     whens[0] += "M"
   }
@@ -247,32 +262,40 @@ function multipleWhensVirtualTable(line,when,event) {
     dates.pop();
   }
 
+  // for each date (with suffix A or M), create a new event
   for (d of dates) {
     let nEvent=JSON.parse(JSON.stringify(event));;
-    nEvent["date"]=d;
-    updateVirtualTableCell(line,d,nEvent);
-    }
+    nEvent["when"]=d;
+    updateVirtualTableCell(line,nEvent);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------------
-function whensVirtualTable(line,when,event) {
-  if ( when.includes("@") ) {
-    multipleWhensVirtualTable(line,when,event);
+function whensVirtualTable(line,event) {
+  console.log("---- Begin whensVirtualTable");
+  console.log("line " + JSON.stringify(line));
+  console.log("event " + JSON.stringify(event));
+  event["date"]="";
+  if ( event["when"].includes("@") ) {
+    //multipleWhensVirtualTable(line,when,event);
+    multipleWhensVirtualTable(line,event);
   } else {
-    simpleWhenVirtualTable(line,when,event);
+    //simpleWhenVirtualTable(line,when,event);
+    simpleWhenVirtualTable(line,event);
   }
+  console.log("---- End whensVirtualTable");
 }
 
 //-------------------------------------------------------------------------------------------------------
 function fillInVirtualTable(myPlanning) {
   console.log("---- Begin fillInVirtualTable");
   for (let item of myPlanning) {
-    console.log(item);
-    let i=item["name"];
-    CTX.getEventsCounter()[i]=0
+    console.log("Item : " + JSON.stringify(item));
+    let name=item["name"];
+    CTX.getEventsCounter()[name]=0
     for (let event of item["events"]) {
-       console.log(event);
-       CTX.getEventsCounter()[i] += 1
+       console.log(" event " + JSON.stringify(event));
+       CTX.getEventsCounter()[name] += 1
 
        //event["note"]="myNote"
        if ( (typeof event["note"] === 'undefined')  || event["note"].length == 0) {
@@ -280,20 +303,15 @@ function fillInVirtualTable(myPlanning) {
        } else {
          event["note"] = item["name"] + ";" + event["note"]
        }
-
-       j=event["when"];
-       k=event;
-       k["date"]="";
-       //console.log(myPlanning[item]["events"][event]["when"]);
-       whensVirtualTable(i,j,k);
+       whensVirtualTable(name,event);
        if (  "links" in event ) {
          for ( link of event["links"] ) {
-           //k["note"] += ": [from] " + i
-           whensVirtualTable(link,j,k);
+           whensVirtualTable(link,event);
          }
        }
     }
   }
+  console.log("fillInVirtualTable : " + JSON.stringify(CTX.getVirtualTable()));
   console.log("---- End fillInVirtualTable");
 }
 
@@ -358,11 +376,12 @@ function createVirtualTableLine(name) {
 
 //-------------------------------------------------------------------------------------------------------
 function initVirtualTable(myPlanning) {
-console.log("--- begin initVirtualTable")
-for (let item of myPlanning) {
-  createVirtualTableLine(item["name"]) 
-}
-console.log("--- end initVirtualTable")
+  console.log("--- begin initVirtualTable")
+  for (let item of myPlanning) {
+    createVirtualTableLine(item["name"]) 
+  }
+  console.log(JSON.stringify(CTX.getVirtualTable()))
+  console.log("--- end initVirtualTable")
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -410,9 +429,9 @@ function getToday(offset) {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function initPublicHolidays(year) {
-for (let d of JoursFeries(year)) {
+  for (let d of JoursFeries(year)) {
     CTX.getPublicHolidays()[date2day(d)]=true;
-}
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -459,7 +478,7 @@ function createPage(myPlanning,myColors) {
   }
   let end=document.getElementById("end").value
   if (end.length == 0) {
-    document.getElementById("end").value=getToday(90)
+    document.getElementById("end").value=getToday(7)
   }
   //myColors1={"Presentiel":"blue","Fake":"yellow"}
   if (myPlanning == null ) {
