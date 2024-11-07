@@ -68,8 +68,15 @@ public class ExcelProcessor {
       Row row = itr.next(); 
       PlanningItem item=new PlanningItem(); 
       Iterator<Cell> cellIterator = row.cellIterator();  
+      boolean keepRow=true;
       while (cellIterator.hasNext())  {  
         Cell cell = cellIterator.next();
+        if (cell.getColumnIndex() == 0) {
+          // Comment in first col
+          System.out.println(" Comment !");
+          keepRow=false;
+          break;
+        }
         switch (cell.getCellType()) {  
           case STRING:    //field that represents string cell type  
             item.setIdx(cell.getColumnIndex(),cell.getStringCellValue());  
@@ -98,7 +105,9 @@ public class ExcelProcessor {
             break;
         } 
       }  
-      itemList.add(item);
+      if ( keepRow ) {
+        itemList.add(item);
+      }
       //System.out.println("");  
     }  
   }  
