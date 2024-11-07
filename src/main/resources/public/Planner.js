@@ -1,4 +1,4 @@
-window.onload= createPage 
+//window.onload= createPage 
  
 function generateTh(row, txt, clazz) {
     let th = document.createElement("th");
@@ -452,6 +452,7 @@ function filterItems() {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function createPage(myPlanning,myColors) {
+  console.log("Create page called : " + myPlanning + " " + myColors)
   let start=document.getElementById("start").value
   if (start.length == 0) {
     document.getElementById("start").value=getToday(-2)
@@ -461,6 +462,19 @@ function createPage(myPlanning,myColors) {
     document.getElementById("end").value=getToday(90)
   }
   //myColors1={"Presentiel":"blue","Fake":"yellow"}
+  if (myPlanning == null ) {
+    console.log("Create page called : myPlanning is null")
+    myPlanning = CTX._myPlanning
+  } else {
+    console.log("Create page called : myPlanning is not null, saved CTX")
+    CTX._myPlanning = myPlanning
+  }
+  console.log("Create page : final myPlanning " + myPlanning)
+  if (myPlanning == null ) {
+    return
+  } 
+  console.log("Create page : final myPlanning " + JSON.stringify(myPlanning))
+  
   CTX={
     _start: document.getElementById("start").value,
     _end: document.getElementById("end").value,
@@ -470,6 +484,7 @@ function createPage(myPlanning,myColors) {
     _eventsCounter:{},
     _publicHolidays:{},
     _virtualTable :{},
+    //_myPlanning:[],
     _colors:myColors,
     getNamesCounter  : function () { return(this._namesCounter) },
     getEventsCounter  : function () { return(this._eventsCounter) },
@@ -499,4 +514,4 @@ function createPage(myPlanning,myColors) {
 //-- Main ----------------
 //--------------------------------------------------------------------------------------------------------------------------------------
 CTX={}
-//myPlanning=null
+myPlanning=null
