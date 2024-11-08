@@ -20,9 +20,9 @@
   xmin-width: 80px;
   position: sticky;
   top: 0;
-  background: #727272;
-  color: #e0e0e0;
-  font-weight: normal;
+  background: lightgray;
+  color: black;
+  font-weight: bold;
 }
 
 .freezeTable td {

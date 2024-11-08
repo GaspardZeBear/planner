@@ -17,7 +17,7 @@ function generateHtmlTableHead(table) {
   let thead = table.createTHead();
   let row = thead.insertRow();
   var loop = new Date(CTX.getStart());
-  generateTh(row,"Item<br>Date<br><br>","col_1");
+  generateTh(row,"Item<br>Date","col_1");
   //generateTh(row,"","dummy");
   for (i in CTX.getVirtualTable()) {
     for (j in CTX.getVirtualTable()[i]) {
@@ -26,33 +26,35 @@ function generateHtmlTableHead(table) {
       if ( txt.endsWith("M") ) {
         txt=txt.substr(0,10);
       } else {
-        txt="........";
+        // quick and dirty way to get day from class !!!!!
+        switch(CTX.getDayProps()[j]) {
+          case 'd0' :
+            txt="Sun";
+            break;
+          case 'd1' :
+            txt="Mon";
+            break;
+          case 'd2' :
+            txt="Tue";
+            break;
+          case 'd3' :
+            txt="Wed";
+            break;
+          case 'd4' :
+            txt="Thu";
+            break;
+          case 'd5' :
+            txt="Fri";
+            break;
+          case 'd6' :
+            txt="Sat";
+            break;
+          default :
+            txt="Tod";
+        }
+        
       }
-      generateTh(row,txt.replace("-","<br>").replace("-","/"),CTX.getDayProps()[j]);
-      //generateTh(row,txt.replace("-","<br>").replace("-","/").replace("M","<br>M").replace("A","<br>"),CTX.getDayProps()[j]);
-    }
-    break;
-  }
-}
-
-function NgenerateHtmlTableHead(table) {
-  let thead = table.createTHead();
-  let row = thead.insertRow();
-  //var loop = new Date(CTX.getStart());
-  //generateTh(row,"Item<br>Date<br><br>","col_1");
-  generateTh(row,"","col_1");
-  generateTh(row,"","dummy");
-  for (i in CTX.getVirtualTable()) {
-    for (j in CTX.getVirtualTable()[i]) {
-      txt=j;
-      //console.log(txt);
-      if ( txt.endsWith("M") ) {
-        txt=txt.substr(5,2)+"--";
-      } else {
-        txt=txt.substr(8,2)+ "--";;
-      }
-      //generateTh(row,txt.replace("-","<br>").replace("-","/"),CTX.getDayProps()[j]);
-      generateTh(row,txt,CTX.getDayProps()[j]);
+      generateTh(row,txt.replace("-","<br>").replace("-","/"),CTX.getDayProps()[j]+"h");
       //generateTh(row,txt.replace("-","<br>").replace("-","/").replace("M","<br>M").replace("A","<br>"),CTX.getDayProps()[j]);
     }
     break;
@@ -83,11 +85,10 @@ function generateTd(line,row, event, col, clazz) {
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
         // color from excel
-        //content.setAttribute("style" , "background-color:red") 
         bgColor="background-color:" + CTX._colors[event["kind"]]
-        width="column-width:" + "10px"
-        style=bgColor+";"+width
-        //cell.setAttribute("style" , "background-color:" + CTX._colors[event["kind"]]) 
+        //width="column-width:" + "50px"
+        //style=bgColor+";"+width
+        style=bgColor
         cell.setAttribute("style" , style)
         cell.classList.add(event["kind"]);
       	details=document.createElement('details')
@@ -103,7 +104,6 @@ function generateTd(line,row, event, col, clazz) {
         content=document.createElement('span');
       }
       content.append(text);
-      
       cell.appendChild(content);
     }
     cell.classList.add(clazz);

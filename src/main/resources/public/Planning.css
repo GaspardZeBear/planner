@@ -11,7 +11,7 @@ th, td {
   border-collapse: collapse;
   border-spacing: 0,0;
   xwidth: 20px;
-  xheight: 10px;
+  xheight: 12px;
 }
 
 .xcol_1 {
@@ -21,74 +21,132 @@ opacity: 1 ;
 z-index: 9999;
 width: 140px;
 background-color: lightyellow;
-xheight: 10px;
+xheight: 12px;
 }
 
 .ruler {
     background-color: lightyellow;
     color:white;
     border: 0px;
-    xheight: 10px;
+    xheight: 12px;
 }
 .weekend {
   color: yellow;
   background-color: grey;
-  xwidth: 10px;
+  xwidth: 12px;
 }
 
 .feast {
     color: black;
     background-color: pink;
-    width: 10px;
+    width: 12px;
   }
 
 .today {
     color: black;
-    background-color: snow;
+    background-color: white;
     border: 2px solid orange;
-    width: 10px;
+    width: 12px;
+  }
+
+.todayh {
+    color: pink;
+    background-color: orange;
+    border: 2px solid orange;
+    width: 12px;
+    font-size: small;
+  }
+
+.d0 {
+    color: yellow;
+    background-color:grey;
+    width: 12px;
+  }
+
+.d0h {
+    color: yellow;
+    background-color:grey;
+    width: 12px;
+    font-size: small;
   }
 
 .d1 {
   color: black;
   background-color:rgb(247, 241, 233);
-  width: 10px;
+  width: 12px;
+}
+
+.d1h {
+  color: black;
+  background-color:rgb(247, 241, 233);
+  width: 12px;
+  font-size: small;
 }
 
 .d2 {
   color: black;
   background-color:white;
-  width: 10px;
+  width: 12px;
+}
+
+.d2h {
+  color: black;
+  background-color:white;
+  width: 12px;
+  font-size: small;
 }
 
 .d3 {
   color: black;
   background-color:rgb(247, 241, 233);
-  width: 10px;
+  width: 12px;
+}
+
+.d3h {
+  color: black;
+  background-color:rgb(247, 241, 233);
+  width: 12px;
+  font-size: small;
 }
 
 .d4 {
   color: black;
   background-color:white;
-  width: 10px;
+  width: 12px;
+}
+
+.d4h {
+  color: black;
+  background-color:white;
+  width: 12px;
+  font-size: small;
 }
 
 .d5 {
   color: black;
   background-color:rgb(247, 241, 233);
-  width: 10px;
+  width: 12px;
+}
+.d5h {
+  color: black;
+  background-color:rgb(247, 241, 233);
+  width: 12px;
+  font-size: small;
 }
 
 .d6 {
   color: lightgoldenrodyellow;
   background-color:darkgrey;
-  width: 10px;
+  width: 12px;
 }
 
-.d0 {
-  color: yellow;
-  background-color:grey;
-  width: 10px;
+.d6h {
+  color: lightgoldenrodyellow;
+  background-color:darkgrey;
+  width: 12px;
+  font-size: small;
 }
+
+
 
 </style>
