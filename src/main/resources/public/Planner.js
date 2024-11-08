@@ -75,13 +75,18 @@ function generateTd(row, event, col, clazz) {
       let text = document.createTextNode(event["kind"]);
       let content=document.createElement('a'); 
       if ( col > 2 ) {
+        text = document.createTextNode(event["kind"].substring(0,4));
+
         content.setAttribute("data-tootik",event["note"])
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
-// color from excel
+        // color from excel
         //content.setAttribute("style" , "background-color:red") 
-        content.setAttribute("style" , "background-color:" + CTX._colors[event["kind"]]) 
-
+        bgColor="background-color:" + CTX._colors[event["kind"]]
+        width="column-width:" + "10px"
+        style=bgColor+";"+width
+        //cell.setAttribute("style" , "background-color:" + CTX._colors[event["kind"]]) 
+        cell.setAttribute("style" , style)
         cell.classList.add(event["kind"]);
       	details=document.createElement('details')
 	      p=document.createElement('p')
