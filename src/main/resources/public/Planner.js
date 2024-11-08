@@ -144,8 +144,11 @@ function updateVirtualTableCell(line,event) {
     console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
     when=event["when"]
     // if virtual table entry <name><suffixed date> already contains an event
-    // must create a new table entry with new name : <name_<num>+><suffixed date>
+    // must create a new table line with new name : <name_<num>+><suffixed date>
     // (<num> Each name has a counter !)
+    if (   Object.keys(CTX.getVirtualTable()[line][when] == null) ) {
+      CTX.getVirtualTable()[line][when]={}
+    }
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length > 0 ) {
       let processing = "[" + CTX.getVirtualTable()[line][when]["kind"] + "/" + CTX.getVirtualTable()[line][when]["note"]  + "]";
       processing += "\n&& " + "[" + event["kind"] + "/" + event["note"] + "]";
@@ -180,8 +183,8 @@ function isWhenInStartEnd(when) {
 //-------------------------------------------------------------------------------------------------------
 // Suffix A or M
 function updateVirtualTableCellWithSuffix(line,event,suffix) {
-  console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
-  console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
+  //console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
+  //console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
@@ -195,14 +198,14 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
 //-------------------------------------------------------------------------------------------------------
 // when contains a entire date (ex 2024-11-05)  or entire date with A or M suffix (ex 2024-11-05A)
 function simpleWhenVirtualTable(line,event) {
-  console.log("simpleWhenVirtualTable line " + line)
-  console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
+  //console.log("simpleWhenVirtualTable line " + line)
+  //console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
   let nEvent=JSON.parse(JSON.stringify(event));
   nEvent["line"]=line;
-  console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
+  //console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
 
   // if entire day (no A or M suffix) 
   if (event["when"].length == 10) {
@@ -287,13 +290,13 @@ function whensVirtualTable(line,event) {
     //simpleWhenVirtualTable(line,when,event);
     simpleWhenVirtualTable(line,event);
   }
-  console.log("---- End whensVirtualTable");
+  //console.log("---- End whensVirtualTable");
 }
 
 //-------------------------------------------------------------------------------------------------------
-function fillInVirtualTable(myPlanning) {
+function fillInVirtualTable() {
   console.log("---- Begin fillInVirtualTable");
-  for (let item of myPlanning) {
+  for (let item of CTX._myPlanning) {
     console.log("Item : " + JSON.stringify(item));
     let name=item["name"];
     CTX.getEventsCounter()[name]=0
@@ -315,7 +318,7 @@ function fillInVirtualTable(myPlanning) {
        }
     }
   }
-  console.log("fillInVirtualTable : " + JSON.stringify(CTX.getVirtualTable()));
+  //console.log("fillInVirtualTable : " + JSON.stringify(CTX.getVirtualTable()));
   console.log("---- End fillInVirtualTable");
 }
 
@@ -379,12 +382,12 @@ function createVirtualTableLine(name) {
 }
 
 //-------------------------------------------------------------------------------------------------------
-function initVirtualTable(myPlanning) {
+function initVirtualTable() {
   console.log("--- begin initVirtualTable")
-  for (let item of myPlanning) {
+  for (let item of CTX._myPlanning) {
     createVirtualTableLine(item["name"]) 
   }
-  console.log(JSON.stringify(CTX.getVirtualTable()))
+  //console.log(JSON.stringify(CTX.getVirtualTable()))
   console.log("--- end initVirtualTable")
 }
 
@@ -432,6 +435,15 @@ function getToday(offset) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
+function getMonday(offset) {
+  let msday=86400*1000
+  var prevMonday = new Date();
+  prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);
+  monday=new Date(prevMonday.getTime() + 7*offset*msday -msday);
+  return(monday.toJSON().slice(0,10));
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
 function initPublicHolidays(year) {
   for (let d of JoursFeries(year)) {
     CTX.getPublicHolidays()[date2day(d)]=true;
@@ -439,10 +451,37 @@ function initPublicHolidays(year) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
+function resetDates() {
+  document.getElementById("start").value="";
+  document.getElementById("end").value="";
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+function modifyStartDate(offset) {
+  //document.getElementById("start").value=document.getElementById("start").value;
+  var d=new Date(CTX.getStart());
+  d.setDate(d.getDate() + offset)
+  document.getElementById("start").value = d.toJSON().slice(0,10)
+  CTX.setStart(document.getElementById("start").value = d.toJSON().slice(0,10))
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+function modifyDuration(duration) {
+  let msday=86400*1000
+  document.getElementById("duration").value=duration;
+  CTX.setDuration(duration)
+  var d=new Date(CTX.getStart());
+  let nd= new Date(new Date().getTime() + duration*msday).toJSON().slice(0, 10)
+  document.getElementById("end").value=nd;
+  CTX.setEnd(nd);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
 function filterItems() {
   // Declare variables
   var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
+  input = document.getElementById("lineFilter");
   filter = input.value.toUpperCase();
   table = document.getElementById("planning");
   tr = table.getElementsByTagName("tr");
@@ -475,39 +514,53 @@ function filterItems() {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function createPage(myPlanning,myColors) {
+  if ( Object.keys(CTX).length == 0 ) {
+    console.log("Create page called CTX empty ")
+  } else {
+    console.log("Create page called : " + JSON.stringify(CTX))
+  }
   console.log("Create page called : " + myPlanning + " " + myColors)
   let start=document.getElementById("start").value
   if (start.length == 0) {
-    document.getElementById("start").value=getToday(-2)
+    //document.getElementById("start").value=getToday(-2)
+    document.getElementById("start").value=getMonday(0)
   }
   let end=document.getElementById("end").value
   if (end.length == 0) {
-    document.getElementById("end").value=getToday(7)
+    //document.getElementById("end").value=getToday(14)
+    document.getElementById("end").value=getMonday(52)
   }
-  //myColors1={"Presentiel":"blue","Fake":"yellow"}
-  if (myPlanning == null ) {
-    console.log("Create page called : myPlanning is null")
-    myPlanning = CTX._myPlanning
-  } else {
-    console.log("Create page called : myPlanning is not null, saved CTX")
-    CTX._myPlanning = myPlanning
+  let duration=document.getElementById("duration").value
+  if (duration.length == 0) {
+    //document.getElementById("end").value=getToday(14)
+    document.getElementById("duration").value=21
   }
-  console.log("Create page : final myPlanning " + myPlanning)
+   
+  //if (myPlanning == null ) {
+  //  console.log("Create page called : myPlanning is null")
+  //  myPlanning = CTX._myPlanning
+  //} else {
+  //  console.log("Create page called : myPlanning is not null, save to CTX")
+  //  CTX._myPlanning = myPlanning
+  //}
   if (myPlanning == null ) {
+    console.log("Create page called : myPlanning not found")
     return
   } 
-  console.log("Create page : final myPlanning " + JSON.stringify(myPlanning))
+  console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
   
   CTX={
     _start: document.getElementById("start").value,
     _end: document.getElementById("end").value,
+    _duration: document.getElementById("duration").value,
     _daysList: [],
     _dayProps:{},
     _namesCounter:{},
     _eventsCounter:{},
     _publicHolidays:{},
+    // deep clone because initial one will be modified
+    _myPlanning: JSON.parse(JSON.stringify(myPlanning)),
     _virtualTable :{},
-    //_myPlanning:[],
     _colors:myColors,
     getNamesCounter  : function () { return(this._namesCounter) },
     getEventsCounter  : function () { return(this._eventsCounter) },
@@ -517,14 +570,17 @@ function createPage(myPlanning,myColors) {
     getDayProps  : function () { return(this._dayProps) },
     getStart  : function () { return(new Date(this._start)) },
     setStart  : function (val) { this._start=val },
-    getEnd  : function () { return(new Date(this._end)) }
+    setEnd  : function (val) { this._end=val },
+    getEnd  : function () { return(new Date(this._end)) },
+    setDuration  : function (val) { this._duration=val },
+    getDuration  : function () { return(this._duration) },
   }
 
   initDaysList()
   initPublicHolidays("2022")
   initPublicHolidays("2023")
-  initVirtualTable(myPlanning);
-  fillInVirtualTable(myPlanning);
+  initVirtualTable();
+  fillInVirtualTable();
   //console.table(virtualTable)
   var table = document.querySelector("#planning");
   table.innerHTML=""

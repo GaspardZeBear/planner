@@ -2,8 +2,8 @@
 
 
 .freezeTable {
-  xwidth: 600px;
-  xheight: 400px;
+  width: 600px;
+  height: 400px;
   overflow: scroll;
   border: 1px solid #777777;
 }
@@ -42,27 +42,16 @@
   xmin-width: 150px;
 }
 
-.xfreezeTable th:nth-child(2),
-.xfreezeTable td:nth-child(2) {
-  position: sticky;
-  /* 1st cell left/right padding + 1st cell width + 1st cell left/right border width */
-  /* 0 + 5 + 150 + 5 + 1 */
-  left: 161px;
-  xwidth: 50px;
-  xmin-width: 50px;
-}
 
 .freezeTable td:nth-child(1){
   background: #ffebb5;
-}
-.xfreezeTable td:nth-child(2) {
-  background: #ffebb5;
-}
-
-.freezeTable th:nth-child(1) {
+  font-weight: bold;
   z-index: 2;
 }
-.xfreezeTable th:nth-child(2) {
+
+
+.freezeTable th:nth-child(1) {
+  font-weight: bold;
   z-index: 2;
 }
 

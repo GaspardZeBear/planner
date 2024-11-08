@@ -16,8 +16,6 @@
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-       // Typical action to be performed when the document is ready:
-       //document.getElementById("demo").innerHTML = xhttp.responseText;
        console.log("Excel loaded : ")
        myPlanning = JSON.parse(xhttp.responseText);
        createPage(myPlanning["Planning"],myPlanning["Colors"]);
@@ -31,11 +29,29 @@ console.log("CTX " + JSON.stringify(CTX))
 
 <body>
     <h2>Commands</h2>
-    <input type="text" id="myInput" onkeyup="filterItems()" placeholder="Search for items ..">
+    <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
     <form>
-    <input type="text" id="start" placeholder="start" value="">
-    <input type="text" id="end" placeholder="end" value="">
-    <input type="button" onclick='createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="text" id="start" placeholder="start" value="">
+      <input type="text" id="end" placeholder="end" value="">
+      
+      <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <br/>
+      <p>Start
+      <input type="button" value="-28" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="-14" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="-7" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="+7" onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="+14" onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      <input type="button" value="+28" onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+      </p>
+      <p>Duration
+        <input type="text" id="duration" placeholder="duration" value="21">
+        <input type="button" value="7" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+        <input type="button" value="14" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+        <input type="button" value="21" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+        <input type="button" value="28" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+        </p>
      </form>
     <p>Hint : !xxx to negate, !\+ to compact</p>
 
