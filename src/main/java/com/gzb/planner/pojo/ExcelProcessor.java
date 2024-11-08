@@ -95,13 +95,15 @@ public class ExcelProcessor {
                 item.setIdx(cell.getColumnIndex(),String.valueOf(cellValue.getNumberValue()));  
                 break; 
               default: 
-                item.setIdx(cell.getColumnIndex(),"???");
+                //item.setIdx(cell.getColumnIndex(),"???");
+                keepRow=false;
                 break; 
             }
             break;
           default: 
-            item.setIdx(cell.getColumnIndex(),"?");
+            //item.setIdx(cell.getColumnIndex(),"?");
             System.out.println(" cellType " + String.valueOf(cell.getCellType()));
+            keepRow=false;
             break;
         } 
       }  
