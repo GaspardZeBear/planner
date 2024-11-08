@@ -18,7 +18,7 @@ function generateHtmlTableHead(table) {
   let row = thead.insertRow();
   var loop = new Date(CTX.getStart());
   generateTh(row,"Item<br>Date<br><br>","col_1");
-  generateTh(row,"","dummy");
+  //generateTh(row,"","dummy");
   for (i in CTX.getVirtualTable()) {
     for (j in CTX.getVirtualTable()[i]) {
       txt=j;
@@ -59,11 +59,12 @@ function NgenerateHtmlTableHead(table) {
   }
 }
 
-function getHrefFromEvent(event) {
-  return(event["line"]+"_"+event["date"]);
+function getHrefFromEvent(line,event) {
+  //console.log("getHref " + JSON.stringify(event))
+  return(line+"_"+event["when"]);
 }
 
-function generateTd(row, event, col, clazz) {
+function generateTd(line,row, event, col, clazz) {
     let cell = row.insertCell();
     //console.log(event);
     if ( (Object.keys(event).length == 0)) {
@@ -73,11 +74,12 @@ function generateTd(row, event, col, clazz) {
 
     if ( (Object.keys(event).length > 0) && ("kind" in event) ) {
       let text = document.createTextNode(event["kind"]);
-      let content=document.createElement('a'); 
-      if ( col > 2 ) {
+      let content; 
+      if ( col > 1 ) {
+        content=document.createElement('a');
         text = document.createTextNode(event["kind"].substring(0,4));
 
-        content.setAttribute("data-tootik",event["note"])
+        content.setAttribute("data-tootik",event["kind"] + ";" + event["note"])
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
         // color from excel
@@ -96,9 +98,12 @@ function generateTd(row, event, col, clazz) {
 	      details.append(p)
 	      details.append(summary)
         //cell.appendChild(details);
-      } 
+        content.href="#"+getHrefFromEvent(line,event);
+      } else {
+        content=document.createElement('span');
+      }
       content.append(text);
-      content.href="#"+getHrefFromEvent(event);
+      
       cell.appendChild(content);
     }
     cell.classList.add(clazz);
@@ -118,21 +123,15 @@ function generateHtmlTable(table) {
   //console.log(items);
   names=Object.keys(CTX.getVirtualTable())
   names.sort()
-  for (i of names ) {
+  for (line of names ) {
     let row = table.insertRow();
-    // fill in 2 first columns
-    generateTd(row,{kind:i},1,"col_1");
-    // dummy cause first cols is absolute
-    generateTd(row,{kind:"XXX"},2,"dummy");
-
-    if ( CTX.getEventsCounter()[i] == 0 ) {
-      //for (j in CTX.getDaysList()) {
-      //  generateTd(row,{kind:"H"},3,'ruler');
-      //} 
+    // fill in  first columns
+    generateTd(line,row,{kind:line},1,"col_1");
+    if ( CTX.getEventsCounter()[line] == 0 ) {
       generateTdRuler(row)
     } else {
-      for (j in CTX.getVirtualTable()[i]) {
-        generateTd(row,CTX.getVirtualTable()[i][j],3,CTX.getDayProps()[j]);
+      for (j in CTX.getVirtualTable()[line]) {
+        generateTd(line,row,CTX.getVirtualTable()[line][j],3,CTX.getDayProps()[j]);
       }
     }
   }
@@ -400,7 +399,7 @@ function fillDatasTable(datas) {
           row.insertCell().appendChild(document.createTextNode(j));
           let cell=row.insertCell();
           cell.appendChild(document.createTextNode(k["kind"]));
-          cell.setAttribute("id",getHrefFromEvent(k));
+          cell.setAttribute("id",getHrefFromEvent(i,k));
           cell.classList.add(k["kind"]);
           if ( "note" in k && k["note"].length > 0 ) {      
             row.insertCell().appendChild(document.createTextNode(k["note"]));
@@ -531,6 +530,7 @@ function createPage(myPlanning,myColors) {
   table.innerHTML=""
   generateHtmlTable(table); // generate the table first
   generateHtmlTableHead(table); // then the head
+  
   var datas = document.querySelector("#datas");
   fillDatasTable(datas) ;
 }

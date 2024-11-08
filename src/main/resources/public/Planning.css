@@ -14,7 +14,7 @@ th, td {
   xheight: 10px;
 }
 
-.col_1 {
+.xcol_1 {
     color: blue;
 position:absolute;
 opacity: 1 ;
@@ -90,7 +90,5 @@ xheight: 10px;
   background-color:grey;
   width: 10px;
 }
-
-
 
 </style>
