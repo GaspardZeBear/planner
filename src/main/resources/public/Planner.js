@@ -21,6 +21,10 @@ function generateHtmlTableHead(table) {
   //generateTh(row,"","dummy");
   for (i in CTX.getVirtualTable()) {
     for (j in CTX.getVirtualTable()[i]) {
+      if ( j > date2String(CTX.getEnd()) ) {
+        break;
+      }
+      
       txt=j;
       //console.log(txt);
       if ( txt.endsWith("M") ) {
@@ -67,6 +71,10 @@ function getHrefFromEvent(line,event) {
 }
 
 function generateTd(line,row, event, col, clazz) {
+    //console.log("____ " + event["when"] + " " + date2String(CTX.getEnd()));
+    //if ( event["when"] > date2String(CTX.getEnd()) ) {
+    //  return
+    //}
     let cell = row.insertCell();
     //console.log(event);
     if ( (Object.keys(event).length == 0)) {
@@ -131,6 +139,9 @@ function generateHtmlTable(table) {
       generateTdRuler(row)
     } else {
       for (j in CTX.getVirtualTable()[line]) {
+        if ( j > date2String(CTX.getEnd()) ) {
+          break;
+        }
         generateTd(line,row,CTX.getVirtualTable()[line][j],3,CTX.getDayProps()[j]);
       }
     }
@@ -361,7 +372,8 @@ function createVirtualTableLine(name) {
   CTX.getVirtualTable()[name]={};
   let today=new Date()
   let loop = new Date(CTX.getStart());
-  while(loop <= CTX.getEnd()){
+  while(loop <= CTX.getMaxDate()){
+  //while(loop <= CTX.getEnd()){
     let day=date2day(loop);
     CTX.getVirtualTable()[name][day + "M"]={};
     CTX.getVirtualTable()[name][day + "A"]={};
@@ -425,6 +437,11 @@ function initDaysList() {
     let newDate = loop.setDate(loop.getDate() + 1);
     loop = new Date(newDate);
    }
+}
+//-----------------------------------------------------------------------------------
+function date2String(d) {
+  let nd= new Date(new Date(d).getTime()).toJSON().slice(0, 10)
+  return(nd)
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -528,7 +545,7 @@ function createPage(myPlanning,myColors) {
   let end=document.getElementById("end").value
   if (end.length == 0) {
     //document.getElementById("end").value=getToday(14)
-    document.getElementById("end").value=getMonday(52)
+    document.getElementById("end").value=getMonday(3)
   }
   let duration=document.getElementById("duration").value
   if (duration.length == 0) {
@@ -536,19 +553,12 @@ function createPage(myPlanning,myColors) {
     document.getElementById("duration").value=21
   }
    
-  //if (myPlanning == null ) {
-  //  console.log("Create page called : myPlanning is null")
-  //  myPlanning = CTX._myPlanning
-  //} else {
-  //  console.log("Create page called : myPlanning is not null, save to CTX")
-  //  CTX._myPlanning = myPlanning
-  //}
   if (myPlanning == null ) {
     console.log("Create page called : myPlanning not found")
     return
   } 
   console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
-  
+  maxDate=getMonday(52)
   CTX={
     _start: document.getElementById("start").value,
     _end: document.getElementById("end").value,
@@ -558,6 +568,7 @@ function createPage(myPlanning,myColors) {
     _namesCounter:{},
     _eventsCounter:{},
     _publicHolidays:{},
+    _maxDate:getMonday(52),
     // deep clone because initial one will be modified
     _myPlanning: JSON.parse(JSON.stringify(myPlanning)),
     _virtualTable :{},
@@ -568,6 +579,7 @@ function createPage(myPlanning,myColors) {
     getVirtualTable  : function () { return(this._virtualTable) },
     getDaysList  : function () { return(this._daysList) },
     getDayProps  : function () { return(this._dayProps) },
+    getMaxDate  : function () { return(new Date(this._maxDate)) },
     getStart  : function () { return(new Date(this._start)) },
     setStart  : function (val) { this._start=val },
     setEnd  : function (val) { this._end=val },
