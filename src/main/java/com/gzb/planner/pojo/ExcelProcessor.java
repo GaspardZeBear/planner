@@ -65,16 +65,21 @@ public class ExcelProcessor {
     Row row1=itr.next();  // skip first line
     itemList = new ArrayList<PlanningItem>();
     FormulaEvaluator evaluator=wb.getCreationHelper().createFormulaEvaluator();
+    int rowNum=2;
     while (itr.hasNext())  {  
+      System.out.println(" Processing row " + String.valueOf(rowNum));
       Row row = itr.next(); 
       PlanningItem item=new PlanningItem(); 
       Iterator<Cell> cellIterator = row.cellIterator();  
       boolean keepRow=true;
+      int colNum=1;
       while (cellIterator.hasNext())  {  
         Cell cell = cellIterator.next();
-        if (cell.getColumnIndex() == 0) {
-          // Comment in first col
-          System.out.println(" Comment !");
+        System.out.println(" rowNum "  + rowNum + " colnum=" + colNum + " colIndex=" + cell.getColumnIndex());
+        if (cell.getColumnIndex() == 0 && cell.getStringCellValue().length() > 0 ) {
+          // Comment in first col. Strange case : columnIndex =0 with empty cell 
+          System.out.println(" Comment ! colnum=" + colNum + " length=" + cell.getStringCellValue().length());
+
           keepRow=false;
           break;
         }
@@ -97,9 +102,13 @@ public class ExcelProcessor {
                 break; 
               default: 
                 //item.setIdx(cell.getColumnIndex(),"???");
+                System.out.println(" FORMULA unknown result type !");
                 keepRow=false;
                 break; 
             }
+            break;
+          case BLANK:    //field that represents number cell type  
+            //item.setIdx(cell.getColumnIndex(),String.valueOf(cell.getNumericCellValue()));  
             break;
           default: 
             //item.setIdx(cell.getColumnIndex(),"?");
@@ -107,10 +116,12 @@ public class ExcelProcessor {
             keepRow=false;
             break;
         } 
+        colNum++;
       }  
       if ( keepRow ) {
         itemList.add(item);
       }
+      rowNum++;
       //System.out.println("");  
     }  
   }  

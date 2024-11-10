@@ -421,13 +421,14 @@ function fillDetailsTable(datas) {
     for (i in CTX.getVirtualTable()) {
       for (j in CTX.getVirtualTable()[i]) { 
         k=CTX.getVirtualTable()[i][j];
-        if ( Object.keys(k).length > 0 && !(k["note"]=== undefined) ) {
+        if ( Object.keys(k).length > 0 && !(k["note"]=== undefined) && k["kind"].length > 0) {
           let row = datas.insertRow();
           row.insertCell().appendChild(document.createTextNode(i));
           row.insertCell().appendChild(document.createTextNode(j));
           let cell=row.insertCell();
           cell.appendChild(document.createTextNode(k["kind"]));
           cell.setAttribute("id",getHrefFromEvent(i,k));
+          console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
           cell.classList.add(k["kind"]);
           if ( "note" in k && k["note"].length > 0 ) {      
             row.insertCell().appendChild(document.createTextNode(k["note"]));
