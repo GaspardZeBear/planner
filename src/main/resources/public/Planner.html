@@ -13,6 +13,20 @@
 <script type="text/javascript" src="Planner.js"></script>
 
 <script>
+
+var xhttpFiles = new XMLHttpRequest();
+xhttpFiles.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       
+       excelFiles = JSON.parse(xhttpFiles.responseText);
+       console.log("ExcelFiles : " + JSON.stringify(excelFiles))
+       buildExcelFilesList(excelFiles);
+       }
+};
+//http.open("GET", "Planning.txt", true);
+xhttpFiles.open("GET", "/excellist", true);
+xhttpFiles.send();
+
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -22,17 +36,19 @@ xhttp.onreadystatechange = function() {
     }
 };
 //http.open("GET", "Planning.txt", true);
-xhttp.open("GET", "/excelreader", true);
+xhttp.open("GET", "/excelreader/Sample.xlsx", true);
 xhttp.send();
-console.log("CTX " + JSON.stringify(CTX))
+
+//console.log("CTX " + JSON.stringify(CTX))
 </script>
 
 <body>
     <h2>Commands</h2>
-    <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
-    Hint : !xxx to negate, !\+ to compact
+    
 
+    <div id="excelFiles">
 
+    </div>
     <form>
       <input type="text" id="start" placeholder="start" value="">
       <input type="text" id="end" placeholder="end" value="">
@@ -72,6 +88,8 @@ console.log("CTX " + JSON.stringify(CTX))
      
         
     <h2>Planning</h2>
+    <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
+    Hint : !xxx to negate, !\+ to compact
     <div class="freezeTable">
     <table id="planning">
 
@@ -79,7 +97,7 @@ console.log("CTX " + JSON.stringify(CTX))
     </div>
 
     <h2>Details</h2>
-    <table id="datas">
+    <table id="details">
 
     </table>
 </body>

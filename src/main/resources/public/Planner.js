@@ -151,8 +151,8 @@ function generateHtmlTable(table) {
 //-------------------------------------------------------------------------------------------------------
 function updateVirtualTableCell(line,event) {
     // some events at same date
-    console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
-    console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
+    //console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
+    //console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
     when=event["when"]
     // if virtual table entry <name><suffixed date> already contains an event
     // must create a new table line with new name : <name_<num>+><suffixed date>
@@ -290,9 +290,9 @@ function multipleWhensVirtualTable(line,event) {
 
 //-------------------------------------------------------------------------------------------------------
 function whensVirtualTable(line,event) {
-  console.log("---- Begin whensVirtualTable");
-  console.log("line " + JSON.stringify(line));
-  console.log("event " + JSON.stringify(event));
+  //console.log("---- Begin whensVirtualTable");
+  //console.log("line " + JSON.stringify(line));
+  //console.log("event " + JSON.stringify(event));
   event["date"]="";
   if ( event["when"].includes("@") ) {
     //multipleWhensVirtualTable(line,when,event);
@@ -404,7 +404,7 @@ function initVirtualTable() {
 }
 
 //-------------------------------------------------------------------------------------------------------
-function fillDatasTable(datas) {
+function fillDetailsTable(datas) {
     for (i in CTX.getVirtualTable()) {
       for (j in CTX.getVirtualTable()[i]) { 
         k=CTX.getVirtualTable()[i][j];
@@ -557,7 +557,7 @@ function createPage(myPlanning,myColors) {
     console.log("Create page called : myPlanning not found")
     return
   } 
-  console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
+  //console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
   maxDate=getMonday(52)
   CTX={
     _start: document.getElementById("start").value,
@@ -599,11 +599,26 @@ function createPage(myPlanning,myColors) {
   generateHtmlTable(table); // generate the table first
   generateHtmlTableHead(table); // then the head
   
-  var datas = document.querySelector("#datas");
-  fillDatasTable(datas) ;
+  var datas = document.querySelector("#details");
+  fillDetailsTable(datas) ;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+function buildExcelFilesList(filesList) {
+  console.log("excelFiles " + JSON.stringify(filesList))
+  var excelFilesList = document.createElement("select");
+  excelFilesList.id="excelFiles";
+  document.querySelector("#excelFiles").appendChild(excelFilesList)
+  for ( xfile of filesList ) {
+    console.log(" File " + xfile)
+    var option=document.createElement("option")
+    option.value=xfile
+    option.text=xfile
+    excelFilesList.appendChild(option)
+  }
 }
 //--------------------------------------------------------------------------------------------------------------------------------------
 //-- Main ----------------
 //--------------------------------------------------------------------------------------------------------------------------------------
 CTX={}
-myPlanning=null
+//myPlanning=null
