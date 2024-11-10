@@ -75,6 +75,7 @@ function generateTd(line,row, event, col, clazz) {
     //if ( event["when"] > date2String(CTX.getEnd()) ) {
     //  return
     //}
+    //console.log("line : " + line + " row " + row + " event " + JSON.stringify(event) + " col : " + col)
     let cell = row.insertCell();
     //console.log(event);
     if ( (Object.keys(event).length == 0)) {
@@ -89,7 +90,7 @@ function generateTd(line,row, event, col, clazz) {
         content=document.createElement('a');
         text = document.createTextNode(event["kind"].substring(0,4));
 
-        content.setAttribute("data-tootik",event["kind"] + ";" + event["note"])
+        content.setAttribute("data-tootik",event["kind"] + ";" + event["note"] + ";" + event["when"])
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
         // color from excel
@@ -142,6 +143,7 @@ function generateHtmlTable(table) {
         if ( j > date2String(CTX.getEnd()) ) {
           break;
         }
+        //console.log("generateHtmlTable(table) : " + CTX.getVirtualTable()[line] + " j: " +j);
         generateTd(line,row,CTX.getVirtualTable()[line][j],3,CTX.getDayProps()[j]);
       }
     }
@@ -183,18 +185,24 @@ function updateVirtualTableCell(line,event) {
 
 //-------------------------------------------------------------------------------------------------------
 function isWhenInStartEnd(when) {
+  console.log("isWhenInStartEnd() when  " + Date(when.substring(0,10)) + " compared to " + CTX.getStart())
   if ( new Date(when.substring(0,10)) < CTX.getStart() ) {
+    console.log("isWhenInStartEnd() < CTX.getStart()")
     return(false)
   }
   if ( new Date(when.substring(0,10)) > CTX.getEnd() ) {
+    console.log("isWhenInStartEnd() > CTX.getEnd()")
     return(false)
   }
+  console.log("isWhenInStartEnd() in interval")
   return(true)
 }
 //-------------------------------------------------------------------------------------------------------
 // Suffix A or M
 function updateVirtualTableCellWithSuffix(line,event,suffix) {
-  //console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
+  console.log("updateVirtualTableCellWithSuffix line " + line)
+  console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
+  console.log("updateVirtualTableCellWithSuffix " + isWhenInStartEnd(event["when"]))
   //console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
@@ -209,8 +217,9 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
 //-------------------------------------------------------------------------------------------------------
 // when contains a entire date (ex 2024-11-05)  or entire date with A or M suffix (ex 2024-11-05A)
 function simpleWhenVirtualTable(line,event) {
-  //console.log("simpleWhenVirtualTable line " + line)
-  //console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
+  console.log("simpleWhenVirtualTable line " + line)
+  console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
+  console.log("simpleWhenVirtualTable " + isWhenInStartEnd(event["when"]))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
@@ -253,12 +262,13 @@ function multipleWhensVirtualTable(line,event) {
     return
   }
 
+  console.log("multipleWhensVirtualTable() accept " + event["when"])
   // Build an list of dates (suffix A or M) for new events
   let loop = new Date(nstart);
   let dates=[];
   while(loop <= nend){
     let day=date2day(loop);
-    //console.log(day);
+    console.log("multipleWhensVirtualTable() add " + day);
     dates.push(day+"M");
     dates.push(day+"A");
     let newDate = loop.setDate(loop.getDate() + 1);
@@ -266,6 +276,7 @@ function multipleWhensVirtualTable(line,event) {
   }
   
   //throw new Error('This is not an error. This is just to abort javascript');
+  console.log("multipleWhensVirtualTable() dates before  " + dates);
   if ( whens[0].length == 10 ) {
     whens[0] += "M"
   }
@@ -274,16 +285,18 @@ function multipleWhensVirtualTable(line,event) {
   }
 
   if (dates[0].localeCompare(whens[0]) != 0 ) {
-    dates.shift();
+    //dates.shift();
   } 
   if ( dates[dates.length-1].localeCompare(whens[1]) != 0 ) {
-    dates.pop();
+    //dates.pop();
   }
 
+  console.log("multipleWhensVirtualTable() dates after  " + dates);
   // for each date (with suffix A or M), create a new event
   for (d of dates) {
     let nEvent=JSON.parse(JSON.stringify(event));;
     nEvent["when"]=d;
+    console.log("multipleWhensVirtualTable() new event  " + JSON.stringify(nEvent));
     updateVirtualTableCell(line,nEvent);
   }
 }
