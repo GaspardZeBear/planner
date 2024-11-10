@@ -30,31 +30,46 @@ console.log("CTX " + JSON.stringify(CTX))
 <body>
     <h2>Commands</h2>
     <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
+    Hint : !xxx to negate, !\+ to compact
+
+
     <form>
       <input type="text" id="start" placeholder="start" value="">
       <input type="text" id="end" placeholder="end" value="">
       
-      <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <br/>
-      <p>Start
-      <input type="button" value="-28" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="-14" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="-7" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="+7" onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="+14" onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      <input type="button" value="+28" onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-      </p>
-      <p>Duration
-        <input type="text" id="duration" placeholder="duration" value="21">
-        <input type="button" value="7" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-        <input type="button" value="14" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-        <input type="button" value="21" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-        <input type="button" value="28" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
-        </p>
-     </form>
-    <p>Hint : !xxx to negate, !\+ to compact</p>
+      <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
+      <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
+    </form>
 
+      <br/>
+        <input type="text" id="duration" placeholder="duration" value="21" hidden/>
+
+        <div class="xradio-toolbar">
+          <button type="button" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
+            <label>-28d/4w</label>
+          <button type="button" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>-14d/2w</label>
+          <button type="button" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>-7d/1w</label>
+          <button type="button"  onclick='modifyStartDate(-1);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>-1d</label>
+          <button type="button"  onclick='modifyStartDate(1);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>+1d</label>
+          <button type="button"  onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>+7d/1w</label>
+          <button type="button"  onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>+14d/2w</label>
+          <button type="button"  onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+            <label>+28d/4w</label>
+        </div>
+        
+        <button type="button" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>7/1w</button>
+        <button type="button" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>14/2w</button>
+        <button type="button" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Colors"])'>21/3w</button>
+        <button type="button" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>28/1m</button>
+        <button type="button" onclick='modifyDuration(56);createPage(myPlanning["Planning"],myPlanning["Colors"])'>56/2m</button>
+        <button type="button" onclick='modifyDuration(84);createPage(myPlanning["Planning"],myPlanning["Colors"])'>84/3m</button>
+     
         
     <h2>Planning</h2>
     <div class="freezeTable">
