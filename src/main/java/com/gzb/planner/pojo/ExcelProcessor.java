@@ -20,7 +20,7 @@ public class ExcelProcessor {
 
   private String excelFile;
   private ArrayList<PlanningItem> itemList;
-  private HashMap<String,String> colorsMap;
+  private HashMap<String,String> stylesMap;
 
   public ExcelProcessor(String excelFile) {
     this.excelFile=excelFile;
@@ -30,25 +30,26 @@ public class ExcelProcessor {
     try  {  
       FileInputStream fis = new FileInputStream(new File(excelFile));
       XSSFWorkbook wb = new XSSFWorkbook(fis); 
-      computeColors(wb);
+      computeStyles(wb);
       computePlanning(wb);
     } catch(Exception e)  {  
       e.printStackTrace();  
     } 
   }
 
-  public void computeColors(XSSFWorkbook wb) {
+  public void computeStyles(XSSFWorkbook wb) {
     XSSFSheet sheet = wb.getSheet("Colors"); 
     if ( sheet == null ) { 
       return;     
     }  
     Iterator<Row> itr = sheet.iterator();    //iterating over excel file
-    colorsMap = new HashMap<String,String>();
+    Row row1=itr.next();  // skip first line
+    stylesMap = new HashMap<String,String>();
     while (itr.hasNext())  {  
       Row row = itr.next(); 
       if (row.getLastCellNum() > 1) {
         Cell cell = row.getCell(0);
-        colorsMap.put(cell.getStringCellValue(), row.getCell(1).getStringCellValue());
+        stylesMap.put(cell.getStringCellValue(), row.getCell(1).getStringCellValue());
       } else {
         System.out.println("Missing col in colors");
       }
@@ -118,8 +119,8 @@ public class ExcelProcessor {
     return(itemList);
   }
   
-  public HashMap<String,String> getColorsMap() {
-    return(colorsMap);
+  public HashMap<String,String> getStylesMap() {
+    return(stylesMap);
   }
  
 }

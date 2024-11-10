@@ -49,8 +49,8 @@ public class ExcelReader {
 	public String index(@PathVariable String excelFile) {
 		ExcelProcessor xp=new ExcelProcessor(excelFile);
 		ArrayList<PlanningItem> itemList=xp.getItemList();
-		HashMap<String,String> colorMap =xp.getColorsMap();
-		return(new Planning(itemList,colorMap).toJson());
+		HashMap<String,String> stylesMap =xp.getStylesMap();
+		return(new Planning(itemList,stylesMap).toJson());
 	}
 
 }

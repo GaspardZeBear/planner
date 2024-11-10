@@ -34,7 +34,7 @@ function buildPlanningFromExcelFile(excelFileName) {
     if (this.readyState == 4 && this.status == 200) {
        console.log("Excel loaded : ")
        myPlanning = JSON.parse(xhttp.responseText);
-       createPage(myPlanning["Planning"],myPlanning["Colors"]);
+       createPage(myPlanning["Planning"],myPlanning["Styles"]);
     }
   };
   //http.open("GET", "Planning.txt", true);
@@ -57,38 +57,38 @@ function buildPlanningFromExcelFile(excelFileName) {
       <input type="text" id="start" placeholder="start" value="">
       <input type="text" id="end" placeholder="end" value="">
       
-      <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
-      <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
+      <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
+      <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
     </form>
 
       <br/>
         <input type="text" id="duration" placeholder="duration" value="21" hidden/>
 
         <div class="xradio-toolbar">
-          <button type="button" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Colors"])'/>
+          <button type="button" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
             <label>-28d/4w</label>
-          <button type="button" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>-14d/2w</label>
-          <button type="button" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>-7d/1w</label>
-          <button type="button"  onclick='modifyStartDate(-1);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button"  onclick='modifyStartDate(-1);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>-1d</label>
-          <button type="button"  onclick='modifyStartDate(1);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button"  onclick='modifyStartDate(1);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>+1d</label>
-          <button type="button"  onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button"  onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>+7d/1w</label>
-          <button type="button"  onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button"  onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>+14d/2w</label>
-          <button type="button"  onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>
+          <button type="button"  onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>+28d/4w</label>
         </div>
         
-        <button type="button" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Colors"])'>7/1w</button>
-        <button type="button" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Colors"])'>14/2w</button>
-        <button type="button" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Colors"])'>21/3w</button>
-        <button type="button" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Colors"])'>28/1m</button>
-        <button type="button" onclick='modifyDuration(56);createPage(myPlanning["Planning"],myPlanning["Colors"])'>56/2m</button>
-        <button type="button" onclick='modifyDuration(84);createPage(myPlanning["Planning"],myPlanning["Colors"])'>84/3m</button>
+        <button type="button" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>7/1w</button>
+        <button type="button" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>14/2w</button>
+        <button type="button" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Styles"])'>21/3w</button>
+        <button type="button" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Styles"])'>28/1m</button>
+        <button type="button" onclick='modifyDuration(56);createPage(myPlanning["Planning"],myPlanning["Styles"])'>56/2m</button>
+        <button type="button" onclick='modifyDuration(84);createPage(myPlanning["Planning"],myPlanning["Styles"])'>84/3m</button>
      
         
     <h2>Planning</h2>

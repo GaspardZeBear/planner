@@ -94,10 +94,10 @@ function generateTd(line,row, event, col, clazz) {
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
         // color from excel
-        bgColor="background-color:" + CTX._colors[event["kind"]]
+        //bgColor="background-color:" + CTX._colors[event["kind"]]
         //width="column-width:" + "50px"
         //style=bgColor+";"+width
-        style=bgColor
+        style=CTX._styles[event["kind"]]
         cell.setAttribute("style" , style)
         cell.classList.add(event["kind"]);
       	details=document.createElement('details')
@@ -543,13 +543,13 @@ function filterItems() {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
-function createPage(myPlanning,myColors) {
+function createPage(myPlanning,myStyles) {
   if ( Object.keys(CTX).length == 0 ) {
     console.log("Create page called CTX empty ")
   } else {
     console.log("Create page called : " + JSON.stringify(CTX))
   }
-  console.log("Create page called : " + myPlanning + " " + myColors)
+  console.log("Create page called : " + myPlanning + " " + myStyles)
   let start=document.getElementById("start").value
   if (start.length == 0) {
     //document.getElementById("start").value=getToday(-2)
@@ -585,7 +585,7 @@ function createPage(myPlanning,myColors) {
     // deep clone because initial one will be modified
     _myPlanning: JSON.parse(JSON.stringify(myPlanning)),
     _virtualTable :{},
-    _colors:myColors,
+    _styles:myStyles,
     getNamesCounter  : function () { return(this._namesCounter) },
     getEventsCounter  : function () { return(this._eventsCounter) },
     getPublicHolidays  : function () { return(this._publicHolidays) },
