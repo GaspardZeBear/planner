@@ -616,6 +616,10 @@ function buildExcelFilesList(filesList) {
     option.text=xfile
     excelFilesList.appendChild(option)
   }
+  document.querySelector("#excelFiles").addEventListener('change', function (e) { 
+    console.log("File selected" + e.target.value)
+    builPlanningFromExcelFile(e.target.value)
+   });
 }
 //--------------------------------------------------------------------------------------------------------------------------------------
 //-- Main ----------------

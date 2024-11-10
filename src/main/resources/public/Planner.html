@@ -27,28 +27,32 @@ xhttpFiles.onreadystatechange = function() {
 xhttpFiles.open("GET", "/excellist", true);
 xhttpFiles.send();
 
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
+
+function builPlanningFromExcelFile(excelFileName) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
        console.log("Excel loaded : ")
        myPlanning = JSON.parse(xhttp.responseText);
        createPage(myPlanning["Planning"],myPlanning["Colors"]);
     }
-};
-//http.open("GET", "Planning.txt", true);
-xhttp.open("GET", "/excelreader/Sample.xlsx", true);
-xhttp.send();
+  };
+  //http.open("GET", "Planning.txt", true);
+  //xhttp.open("GET", "/excelreader/Sample.xlsx", true);
+  xhttp.open("GET", "/excelreader/"+excelFileName, true);
+  xhttp.send();
+}
 
 //console.log("CTX " + JSON.stringify(CTX))
 </script>
 
 <body>
-    <h2>Commands</h2>
-    
-
+    <h2>Choose Excel planning file</h2>
     <div id="excelFiles">
-
     </div>
+
+    <h2>Work on selected planning</h2>
+
     <form>
       <input type="text" id="start" placeholder="start" value="">
       <input type="text" id="end" placeholder="end" value="">
@@ -90,15 +94,14 @@ xhttp.send();
     <h2>Planning</h2>
     <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
     Hint : !xxx to negate, !\+ to compact
+    <br/>
     <div class="freezeTable">
     <table id="planning">
-
     </table>
     </div>
 
     <h2>Details</h2>
     <table id="details">
-
     </table>
 </body>
 </html>
