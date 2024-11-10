@@ -622,17 +622,28 @@ function buildExcelFilesList(filesList) {
   var excelFilesList = document.createElement("select");
   excelFilesList.id="excelFiles";
   document.querySelector("#excelFiles").appendChild(excelFilesList)
-  for ( xfile of filesList ) {
+  let selected = false
+  var option=document.createElement("option")
+  option.value=""
+  option.text=""
+  option.selected=selected
+  selected=false
+  excelFilesList.appendChild(option)
+  for ( xfile of filesList.sort() ){
     console.log(" File " + xfile)
     var option=document.createElement("option")
     option.value=xfile
     option.text=xfile
+    option.selected=selected
+    selected=false
     excelFilesList.appendChild(option)
   }
   document.querySelector("#excelFiles").addEventListener('change', function (e) { 
     console.log("File selected" + e.target.value)
-    builPlanningFromExcelFile(e.target.value)
-   });
+    if ( e.target.value.length > 0 ) {
+      buildPlanningFromExcelFile(e.target.value)
+    }
+   },true);
 }
 //--------------------------------------------------------------------------------------------------------------------------------------
 //-- Main ----------------
