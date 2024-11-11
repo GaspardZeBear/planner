@@ -83,11 +83,12 @@ function generateTd(line,row, event, col, clazz) {
         cell.classList.add(clazz);
       return
     }
-
+    
     if ( (Object.keys(event).length > 0) && ("kind" in event) ) {
       let text = document.createTextNode(event["kind"]);
       let content; 
       if ( col > 1 ) {
+        console.log("GenerateTd() line " + line + " event " + JSON.stringify(event));
         content=document.createElement('a');
         text = document.createTextNode(event["kind"].substring(0,4));
         let attrib;
@@ -259,7 +260,8 @@ function simpleWhenVirtualTable(line,event) {
   } else {
     // if A or M suffix
     nEvent["date"]=event["when"];
-    updateVirtualTableCell(line,event,nEvent);
+    //updateVirtualTableCell(line,event,nEvent);
+    updateVirtualTableCell(line,nEvent);
   }
  }
 
@@ -354,6 +356,7 @@ function fillInVirtualTable() {
     CTX.getEventsCounter()[name]=0
     for (let event of item["events"]) {
        //console.log(" event " + JSON.stringify(event));
+       event["processing"]=""
        CTX.getEventsCounter()[name] += 1
 
        //event["note"]="myNote"
