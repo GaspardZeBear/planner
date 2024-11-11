@@ -89,8 +89,13 @@ function generateTd(line,row, event, col, clazz) {
       if ( col > 1 ) {
         content=document.createElement('a');
         text = document.createTextNode(event["kind"].substring(0,4));
-
-        content.setAttribute("data-tootik",event["kind"] + ";" + event["note"] + ";" + event["when"])
+        let attrib;
+        if ( event["kind"] == "Multi" ) {
+          attrib=event["processing"] + ";" + event["when"]
+        } else {
+          attrib=event["kind"] + ";" + event["note"] + ";" + event["when"]
+        }
+        content.setAttribute("data-tootik",attrib+"\n")
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
 
         // color from excel
@@ -153,56 +158,78 @@ function generateHtmlTable(table) {
 //-------------------------------------------------------------------------------------------------------
 function updateVirtualTableCell(line,event) {
     // some events at same date
-    //console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
-    //console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
+    console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
+    console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
     when=event["when"]
+    console.log("updateVirtualTableCell virtual table entry " + JSON.stringify(CTX.getVirtualTable()[line][when]))
+
     // if virtual table entry <name><suffixed date> already contains an event
     // must create a new table line with new name : <name_<num>+><suffixed date>
     // (<num> Each name has a counter !)
-    if (   Object.keys(CTX.getVirtualTable()[line][when] == null) ) {
-      CTX.getVirtualTable()[line][when]={}
+    if (   Object.keys(CTX.getVirtualTable()[line][when]).length == 0) {
+    //if ( CTX.getVirtualTable()[line][when] == null ) {
+      console.log("updateVirtualTableCell virtual table entry null, create entry " )
+      CTX.getVirtualTable()[line][when]=event
+      CTX.getNamesCounter()[line]=0
+      return
     }
+    console.log("updateVirtualTableCell virtual table entry contains something 1" )
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length > 0 ) {
+      console.log("updateVirtualTableCell virtual table entry contains something 2" )
+
+      // Save initial event in specific line
+      //if (CTX.getNamesCounter()[line]==0) {
+      if ( CTX.getVirtualTable()[line][when]["kind"] != "Multi" ) {
+        let newLine0=line+"_"+ CTX.getNamesCounter()[line].toString().padStart(2, '0') + '+'
+        CTX.getNamesCounter()[line] += 1
+        createVirtualTableLine(newLine0)
+        whensVirtualTable(newLine0,CTX.getVirtualTable()[line][when]);
+      }
+
+      // replace the event in virtual table with new event kind multi
       let processing = "[" + CTX.getVirtualTable()[line][when]["kind"] + "/" + CTX.getVirtualTable()[line][when]["note"]  + "]";
       processing += "\n&& " + "[" + event["kind"] + "/" + event["note"] + "]";
-      let nWhen=JSON.parse(JSON.stringify(CTX.getVirtualTable()[line][when]));
-      nWhen["kind"]="Multi";
-      nWhen["note"] += processing
-      nWhen["processing"]=processing;
-      CTX.getVirtualTable()[line][when]=nWhen;
-      // Create a new line
-      if ( ! (line in CTX.getNamesCounter()) ) {
-        CTX.getNamesCounter[line]=0
-      }
-      CTX.getNamesCounter[line] += 1
-      let newLine=line+"_"+ CTX.getNamesCounter[line].toString().padStart(2, '0') + '+'
+      let nEvent=JSON.parse(JSON.stringify(CTX.getVirtualTable()[line][when]));
+      console.log("updateVirtualTableCell nEvent " +JSON.stringify(nEvent))
+      nEvent["kind"]="Multi";
+      //nEvent["note"] += processing
+      nEvent["processing"]+=processing;
+      CTX.getVirtualTable()[line][when]=nEvent;
+         
+      // Create a new line with new event 
+      //if ( ! (line in CTX.getNamesCounter()) ) {
+      //  console.log("updateVirtualTableCell bug, no namesCounter !!!")
+      //  CTX.getNamesCounter()[line]=1
+      //}
+      let newLine=line+"_"+ CTX.getNamesCounter()[line].toString().padStart(2, '0') + '+'
+      CTX.getNamesCounter()[line] += 1
       createVirtualTableLine(newLine)
       whensVirtualTable(newLine,event);
     } else {
-      CTX.getVirtualTable()[line][when]=event;
+      //CTX.getVirtualTable()[line][when]=event;
     }
 }
 
 //-------------------------------------------------------------------------------------------------------
 function isWhenInStartEnd(when) {
-  console.log("isWhenInStartEnd() when  " + Date(when.substring(0,10)) + " compared to " + CTX.getStart())
+  //console.log("isWhenInStartEnd() when  " + Date(when.substring(0,10)) + " compared to " + CTX.getStart())
   if ( new Date(when.substring(0,10)) < CTX.getStart() ) {
     console.log("isWhenInStartEnd() < CTX.getStart()")
     return(false)
   }
   if ( new Date(when.substring(0,10)) > CTX.getEnd() ) {
-    console.log("isWhenInStartEnd() > CTX.getEnd()")
+    //console.log("isWhenInStartEnd() > CTX.getEnd()")
     return(false)
   }
-  console.log("isWhenInStartEnd() in interval")
+  //console.log("isWhenInStartEnd() in interval")
   return(true)
 }
 //-------------------------------------------------------------------------------------------------------
 // Suffix A or M
 function updateVirtualTableCellWithSuffix(line,event,suffix) {
-  console.log("updateVirtualTableCellWithSuffix line " + line)
-  console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
-  console.log("updateVirtualTableCellWithSuffix " + isWhenInStartEnd(event["when"]))
+  //console.log("updateVirtualTableCellWithSuffix line " + line)
+  //console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
+  //console.log("updateVirtualTableCellWithSuffix " + isWhenInStartEnd(event["when"]))
   //console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
@@ -323,9 +350,12 @@ function fillInVirtualTable() {
   for (let item of CTX._myPlanning) {
     console.log("Item : " + JSON.stringify(item));
     let name=item["name"];
+    if (name.length == 0) {
+      continue
+    }
     CTX.getEventsCounter()[name]=0
     for (let event of item["events"]) {
-       console.log(" event " + JSON.stringify(event));
+       //console.log(" event " + JSON.stringify(event));
        CTX.getEventsCounter()[name] += 1
 
        //event["note"]="myNote"
@@ -428,7 +458,7 @@ function fillDetailsTable(datas) {
           let cell=row.insertCell();
           cell.appendChild(document.createTextNode(k["kind"]));
           cell.setAttribute("id",getHrefFromEvent(i,k));
-          console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
+          //console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
           cell.classList.add(k["kind"]);
           if ( "note" in k && k["note"].length > 0 ) {      
             row.insertCell().appendChild(document.createTextNode(k["note"]));
