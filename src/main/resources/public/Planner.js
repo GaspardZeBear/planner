@@ -246,13 +246,23 @@ function simpleWhenVirtualTable(line,event) {
   //console.log("simpleWhenVirtualTable line " + line)
   //console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
   //console.log("simpleWhenVirtualTable " + isWhenInStartEnd(event["when"]))
+
+  // Excel formatted when as a date, not a string !
+  //console.log("simpleWhenVirtualTable() type of when " + typeof(event["when"] ) )
+  if ( !isNaN(event["when"]) ) {
+    //console.log("simpleWhenVirtualTable() event " + JSON.stringify(event))
+    let d = new Date(Math.round((event["when"] - 25569) * 86400 * 1000));
+    event["when"]=date2String(d);
+    //console.log("simpleWhenVirtualTable event.when " + event["when"]);
+  }
+
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
   let nEvent=JSON.parse(JSON.stringify(event));
   nEvent["line"]=line;
   //console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
-
+  
   // if entire day (no A or M suffix) 
   if (event["when"].length == 10) {
     updateVirtualTableCellWithSuffix(line,event,"M");
@@ -345,14 +355,62 @@ function whensVirtualTable(line,event) {
 }
 
 //-------------------------------------------------------------------------------------------------------
+function isValidLine(line) {
+  console.log("isValidLine() " + JSON.stringify(line))
+  if (! line.hasOwnProperty("name") ) {
+    console.log("isValidLine() no name")
+    return(false)
+  }
+  if ( line["name"].length == 0) {
+    console.log("isValidLine()  name length = 0 ")
+    return(false)
+  }
+  if (! line.hasOwnProperty("events") ) {
+    console.log("isValidLine() no events")
+    return(false)
+  }
+  if (line["events"].length == 0) {
+    console.log("isValidLine() events length 0")
+    return(false)
+  }
+  for (let event of line["events"]) {
+    if (! event.hasOwnProperty("kind") ) {
+      console.log("isValidLine() no kind")
+      return(false)
+    } 
+    if (! event.hasOwnProperty("when") ) {
+      console.log("isValidLine() no when")
+      return(false)
+    } 
+    if ( !isNaN(event["when"]) ) {
+      //console.log("simpleWhenVirtualTable() event " + JSON.stringify(event))
+      let d = new Date(Math.round((event["when"] - 25569) * 86400 * 1000));
+      event["when"]=date2String(d);
+      //console.log("simpleWhenVirtualTable event.when " + event["when"]);
+    }
+    if ( event["when"].length < 10 ) {
+      console.log("isValidLine()  when length < 10")
+      return(false)
+    }
+
+  }
+  return(true)
+}
+
+
+
+//-------------------------------------------------------------------------------------------------------
 function fillInVirtualTable() {
   console.log("---- Begin fillInVirtualTable");
   for (let item of CTX._myPlanning) {
-    console.log("Item : " + JSON.stringify(item));
-    let name=item["name"];
-    if (name.length == 0) {
+    console.log("fillInVirtualTable() Item : " + JSON.stringify(item));
+    if ( !isValidLine(item) ) {
       continue
     }
+    let name=item["name"];
+    //if (name.length == 0) {
+    //  continue
+    //}
     CTX.getEventsCounter()[name]=0
     for (let event of item["events"]) {
        //console.log(" event " + JSON.stringify(event));
@@ -441,7 +499,7 @@ function createVirtualTableLine(name) {
 function initVirtualTable() {
   console.log("--- begin initVirtualTable")
   for (let item of CTX._myPlanning) {
-    if (item["name"].length == 0) {
+    if ( !isValidLine(item) ) {
       continue
     }
     createVirtualTableLine(item["name"]) 
@@ -464,7 +522,7 @@ function fillDetailsTable(datas) {
           cell.setAttribute("id",getHrefFromEvent(i,k));
           //console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
 
-          //cell.classList.add(k["kind"]);
+          cell.classList.add(k["kind"]);
           style=CTX._styles[k["kind"]]
           cell.setAttribute("style" , style)
           //cell.classList.add(CTX._styles[k["kind"]]);
