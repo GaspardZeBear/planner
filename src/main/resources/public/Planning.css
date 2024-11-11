@@ -51,7 +51,8 @@ th, td {
 
 .Multi {
     color: yellow;
-    background-color:red;
+    background-color:red !important;
+    font-style: italic;
     width: 12px;
   }
 

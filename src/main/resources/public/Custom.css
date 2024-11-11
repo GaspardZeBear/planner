@@ -43,7 +43,7 @@
 
   }
 
-xdiv {
+.xdiv {
   width: 100%;
   overflow-x: scroll;
   overflow-y: visible;

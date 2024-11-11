@@ -17,7 +17,8 @@ function generateHtmlTableHead(table) {
   let thead = table.createTHead();
   let row = thead.insertRow();
   var loop = new Date(CTX.getStart());
-  generateTh(row,"Item<br>Date","col_1");
+  //generateTh(row,"Item<br>Date","col_1");
+  generateTh(row,"Item<br>Date","dummy");
   //generateTh(row,"","dummy");
   for (i in CTX.getVirtualTable()) {
     for (j in CTX.getVirtualTable()[i]) {
@@ -459,7 +460,12 @@ function fillDetailsTable(datas) {
           cell.appendChild(document.createTextNode(k["kind"]));
           cell.setAttribute("id",getHrefFromEvent(i,k));
           //console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
-          cell.classList.add(k["kind"]);
+
+          //cell.classList.add(k["kind"]);
+          style=CTX._styles[k["kind"]]
+          cell.setAttribute("style" , style)
+          //cell.classList.add(CTX._styles[k["kind"]]);
+          
           if ( "note" in k && k["note"].length > 0 ) {      
             row.insertCell().appendChild(document.createTextNode(k["note"]));
           } else {

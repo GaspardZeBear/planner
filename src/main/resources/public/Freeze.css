@@ -52,7 +52,7 @@
 
 .freezeTable th:nth-child(1) {
   font-weight: bold;
-  z-index: 2;
+  z-index: 12;
 }
 
 
