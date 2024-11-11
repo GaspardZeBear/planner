@@ -38,7 +38,7 @@ public class ExcelProcessor {
   }
 
   public void computeStyles(XSSFWorkbook wb) {
-    XSSFSheet sheet = wb.getSheet("Colors"); 
+    XSSFSheet sheet = wb.getSheet("Styles"); 
     if ( sheet == null ) { 
       return;     
     }  
