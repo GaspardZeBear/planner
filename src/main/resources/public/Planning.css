@@ -49,6 +49,12 @@ th, td {
     font-size: small;
   }
 
+.Multi {
+    color: yellow;
+    background-color:red;
+    width: 12px;
+  }
+
 .d0 {
     color: yellow;
     background-color:grey;

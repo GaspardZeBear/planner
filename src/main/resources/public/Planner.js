@@ -97,11 +97,6 @@ function generateTd(line,row, event, col, clazz) {
         }
         content.setAttribute("data-tootik",attrib+"\n")
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
-
-        // color from excel
-        //bgColor="background-color:" + CTX._colors[event["kind"]]
-        //width="column-width:" + "50px"
-        //style=bgColor+";"+width
         style=CTX._styles[event["kind"]]
         cell.setAttribute("style" , style)
         cell.classList.add(event["kind"]);
@@ -114,6 +109,8 @@ function generateTd(line,row, event, col, clazz) {
 	      details.append(summary)
         //cell.appendChild(details);
         content.href="#"+getHrefFromEvent(line,event);
+        content.append(text);
+        cell.appendChild(content);
       } else {
         content=document.createElement('span');
       }
@@ -158,24 +155,24 @@ function generateHtmlTable(table) {
 //-------------------------------------------------------------------------------------------------------
 function updateVirtualTableCell(line,event) {
     // some events at same date
-    console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
-    console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
+    //console.log("updateVirtualTableCell line " + JSON.stringify(line)) 
+    //console.log("updateVirtualTableCell event " + JSON.stringify(event)) 
     when=event["when"]
-    console.log("updateVirtualTableCell virtual table entry " + JSON.stringify(CTX.getVirtualTable()[line][when]))
+    //console.log("updateVirtualTableCell virtual table entry " + JSON.stringify(CTX.getVirtualTable()[line][when]))
 
     // if virtual table entry <name><suffixed date> already contains an event
     // must create a new table line with new name : <name_<num>+><suffixed date>
     // (<num> Each name has a counter !)
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length == 0) {
     //if ( CTX.getVirtualTable()[line][when] == null ) {
-      console.log("updateVirtualTableCell virtual table entry null, create entry " )
+      //console.log("updateVirtualTableCell virtual table entry null, create entry " )
       CTX.getVirtualTable()[line][when]=event
       CTX.getNamesCounter()[line]=0
       return
     }
-    console.log("updateVirtualTableCell virtual table entry contains something 1" )
+    //console.log("updateVirtualTableCell virtual table entry contains something 1" )
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length > 0 ) {
-      console.log("updateVirtualTableCell virtual table entry contains something 2" )
+      //console.log("updateVirtualTableCell virtual table entry contains something 2" )
 
       // Save initial event in specific line
       //if (CTX.getNamesCounter()[line]==0) {
@@ -190,7 +187,7 @@ function updateVirtualTableCell(line,event) {
       let processing = "[" + CTX.getVirtualTable()[line][when]["kind"] + "/" + CTX.getVirtualTable()[line][when]["note"]  + "]";
       processing += "\n&& " + "[" + event["kind"] + "/" + event["note"] + "]";
       let nEvent=JSON.parse(JSON.stringify(CTX.getVirtualTable()[line][when]));
-      console.log("updateVirtualTableCell nEvent " +JSON.stringify(nEvent))
+      //console.log("updateVirtualTableCell nEvent " +JSON.stringify(nEvent))
       nEvent["kind"]="Multi";
       //nEvent["note"] += processing
       nEvent["processing"]+=processing;
@@ -244,9 +241,9 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
 //-------------------------------------------------------------------------------------------------------
 // when contains a entire date (ex 2024-11-05)  or entire date with A or M suffix (ex 2024-11-05A)
 function simpleWhenVirtualTable(line,event) {
-  console.log("simpleWhenVirtualTable line " + line)
-  console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
-  console.log("simpleWhenVirtualTable " + isWhenInStartEnd(event["when"]))
+  //console.log("simpleWhenVirtualTable line " + line)
+  //console.log("simpleWhenVirtualTable event " + JSON.stringify(event))
+  //console.log("simpleWhenVirtualTable " + isWhenInStartEnd(event["when"]))
   if ( ! isWhenInStartEnd(event["when"]) ) {
     return
   }
@@ -440,6 +437,9 @@ function createVirtualTableLine(name) {
 function initVirtualTable() {
   console.log("--- begin initVirtualTable")
   for (let item of CTX._myPlanning) {
+    if (item["name"].length == 0) {
+      continue
+    }
     createVirtualTableLine(item["name"]) 
   }
   //console.log(JSON.stringify(CTX.getVirtualTable()))

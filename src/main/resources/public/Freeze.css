@@ -20,7 +20,7 @@
   xmin-width: 80px;
   position: sticky;
   top: 0;
-  background: lightgray;
+  xbackground: lightgray;
   color: black;
   font-weight: bold;
 }
