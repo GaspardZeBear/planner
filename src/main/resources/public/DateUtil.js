@@ -56,10 +56,23 @@ class DateUtil {
     return(t[2]+"-"+t[1]+"-"+t[0]);
   }
 
-
+//-------------------------------------------------------------------------------------------------------
+static  isWhenInStartEnd(when,start,end) {
+  //console.log("isWhenInStartEnd() when  " + when + " compared to " + DateUtil.date2String(start) + " " + DateUtil.date2String(end))
+  if ( when < DateUtil.date2String(start) ) {
+    //console.log("isWhenInStartEnd() < start")
+    return(false)
+  }
+  if ( when > DateUtil.date2String(end ) ) {
+    //console.log("isWhenInStartEnd() > end")
+    return(false)
+  }
+  //console.log("isWhenInStartEnd() in interval")
+  return(true)
+}
   //-------------------------------------------------------------------------------------------------------
-  static  isWhenInStartEnd(when,start,end) {
-    //console.log("isWhenInStartEnd() when  " + Date(when.substring(0,10)) + " compared to " + CTX.getStart())
+  static  XisWhenInStartEnd(when,start,end) {
+    console.log("isWhenInStartEnd() when  " + Date(when.substring(0,10)) + " compared to " + start + " " + end)
     if ( new Date(when.substring(0,10)) < start ) {
       console.log("isWhenInStartEnd() < start")
       return(false)

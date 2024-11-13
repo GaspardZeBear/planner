@@ -95,6 +95,9 @@ function generateTd(line,row, event, col, clazz) {
         content.setAttribute("data-tootik",attrib+"\n")
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
         style=CTX._styles[event["kind"]]
+        if ( !style.includes(":") ) {
+          style="background-color :" + style
+        }
         cell.setAttribute("style" , style)
         cell.classList.add(event["kind"]);
       	details=document.createElement('details')
@@ -204,11 +207,12 @@ function updateVirtualTableCell(line,event) {
 function updateVirtualTableCellWithSuffix(line,event,suffix) {
   //console.log("updateVirtualTableCellWithSuffix line " + line)
   //console.log("updateVirtualTableCellWithSuffix event " + JSON.stringify(event))
-  //console.log("updateVirtualTableCellWithSuffix " + isWhenInStartEnd(event["when"]))
   //console.log("updateVirtualTableCellWithSuffix suffix " + JSON.stringify(suffix))
-  if ( DateUtil.isWhenInStartEnd(event["when"],CTX.getStart(),CTX.getEnd()) ) {
+  if ( !DateUtil.isWhenInStartEnd(event["when"],CTX.getStart(),CTX.getEnd()) ) {
+    //console.log("updateVirtualTableCellWithSuffix not in interval " + JSON.stringify(suffix))
     return
   }
+  //console.log("updateVirtualTableCellWithSuffix in interval " + JSON.stringify(suffix))
   let nEvent=JSON.parse(JSON.stringify(event));
   let nWhen=event["when"]+suffix;
   nEvent["date"]=nWhen;
@@ -231,10 +235,12 @@ function simpleWhenVirtualTable(line,event) {
     event["when"]=date2String(d);
     //console.log("simpleWhenVirtualTable event.when " + event["when"]);
   }
-
+  //console.log("simpleWhenVirtualTable event when modified ?" + JSON.stringify(event))
   if ( ! DateUtil.isWhenInStartEnd(event["when"],CTX.getStart(),CTX.getEnd()) ) {
+    console.log("simpleWhenVirtualTable event is not in interval" + JSON.stringify(event))
     return
   }
+  //console.log("simpleWhenVirtualTable event is in interval" + JSON.stringify(event))
   let nEvent=JSON.parse(JSON.stringify(event));
   nEvent["line"]=line;
   //console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
@@ -315,9 +321,9 @@ function multipleWhensVirtualTable(line,event) {
 
 //-------------------------------------------------------------------------------------------------------
 function whensVirtualTable(line,event) {
-  //console.log("---- Begin whensVirtualTable");
-  //console.log("line " + JSON.stringify(line));
-  //console.log("event " + JSON.stringify(event));
+  console.log("---- Begin whensVirtualTable");
+  console.log("line " + JSON.stringify(line));
+  console.log("event " + JSON.stringify(event));
   event["date"]="";
   if ( event["when"].includes("@") ) {
     multipleWhensVirtualTable(line,event);
@@ -331,42 +337,43 @@ function whensVirtualTable(line,event) {
 function isValidLine(line) {
   console.log("isValidLine() " + JSON.stringify(line))
   if (! line.hasOwnProperty("name") ) {
-    console.log("isValidLine() no name")
+    console.log("isValidLine() no name !")
     return(false)
   }
   if ( line["name"].length == 0) {
-    console.log("isValidLine()  name length = 0 ")
+    console.log("isValidLine()  name length = 0! ")
     return(false)
   }
   if (! line.hasOwnProperty("events") ) {
-    console.log("isValidLine() no events")
+    console.log("isValidLine() no events!")
     return(false)
   }
   if (line["events"].length == 0) {
-    console.log("isValidLine() events length 0")
+    console.log("isValidLine() events length 0!")
     return(false)
   }
   for (let event of line["events"]) {
     if (! event.hasOwnProperty("kind") ) {
-      console.log("isValidLine() no kind")
+      console.log("isValidLine() no kind!")
       return(false)
     } 
     if (! event.hasOwnProperty("when") ) {
-      console.log("isValidLine() no when")
+      console.log("isValidLine() no when!")
       return(false)
     } 
     if ( !isNaN(event["when"]) ) {
-      //console.log("simpleWhenVirtualTable() event " + JSON.stringify(event))
+      console.log("isValidLine() event " + JSON.stringify(event))
       let d = new Date(Math.round((event["when"] - 25569) * 86400 * 1000));
-      event["when"]=date2String(d);
-      //console.log("simpleWhenVirtualTable event.when " + event["when"]);
+      event["when"]=DateUtil.date2String(d);
+      console.log("isValidLine event.when " + event["when"]);
     }
     if ( event["when"].length < 10 ) {
-      console.log("isValidLine()  when length < 10")
+      console.log("isValidLine()  when length < 10!")
       return(false)
     }
 
   }
+  console.log("isValidLine() is Valid")
   return(true)
 }
 
@@ -376,14 +383,16 @@ function isValidLine(line) {
 function fillInVirtualTable() {
   console.log("---- Begin fillInVirtualTable");
   for (let item of CTX._myPlanning) {
-    console.log("fillInVirtualTable() Item : " + JSON.stringify(item));
+    //console.log("fillInVirtualTable() Item : " + JSON.stringify(item));
     if ( !isValidLine(item) ) {
+      console.log("fillInVirtualTable() Item : isNotValid");
       continue
     }
+    console.log("fillInVirtualTable() Item : isValid");
     let name=item["name"];
     CTX.getEventsCounter()[name]=0
     for (let event of item["events"]) {
-       //console.log(" event " + JSON.stringify(event));
+       console.log(" fillInVirtualTable() event " + JSON.stringify(event));
        event["processing"]=""
        CTX.getEventsCounter()[name] += 1
 
@@ -444,16 +453,16 @@ function initVirtualTable() {
 
 //-------------------------------------------------------------------------------------------------------
 function fillDetailsTable(datas) {
-    for (i in CTX.getVirtualTable()) {
-      for (j in CTX.getVirtualTable()[i]) { 
-        k=CTX.getVirtualTable()[i][j];
+    for (line in CTX.getVirtualTable()) {
+      for (j in CTX.getVirtualTable()[line]) { 
+        k=CTX.getVirtualTable()[line][j];
         if ( Object.keys(k).length > 0 && !(k["note"]=== undefined) && k["kind"].length > 0) {
           let row = datas.insertRow();
-          row.insertCell().appendChild(document.createTextNode(i));
+          row.insertCell().appendChild(document.createTextNode(line));
           row.insertCell().appendChild(document.createTextNode(j));
           let cell=row.insertCell();
           cell.appendChild(document.createTextNode(k["kind"]));
-          cell.setAttribute("id",getHrefFromEvent(i,k));
+          cell.setAttribute("id",getHrefFromEvent(line,k));
           //console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
 
           cell.classList.add(k["kind"]);
@@ -610,6 +619,7 @@ function createPage(myPlanning,myStyles) {
   initDaysList()
   initPublicHolidays("2022")
   initPublicHolidays("2023")
+  initPublicHolidays("2024")
   initVirtualTable();
   fillInVirtualTable();
   var table = document.querySelector("#planning");
