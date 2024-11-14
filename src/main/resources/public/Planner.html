@@ -47,6 +47,8 @@ function buildPlanningFromExcelFile(excelFileName) {
 }
 
 //console.log("CTX " + JSON.stringify(CTX))
+//---------------------------------------------------------------------------------------------------------------------------------------------
+
 </script>
 
 <body>
@@ -62,7 +64,11 @@ function buildPlanningFromExcelFile(excelFileName) {
       
       <input type="button" value="Display" onclick='createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
       <input type="button" value="Reset" onclick='resetDates();createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
+        <br/>
     </form>
+
+    <br/>
+    <input type="checkbox" id="weekend" onclick='toggleWeekend();createPage(myPlanning["Planning"],myPlanning["Styles"])'>Weekend</button>
 
       <br/>
         <input type="text" id="duration" placeholder="duration" value="21" hidden/>
@@ -95,6 +101,7 @@ function buildPlanningFromExcelFile(excelFileName) {
      
         
     <h2>Planning</h2>
+
     <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
     Hint : !xxx to negate, !\+ to compact
     <br/>

@@ -13,6 +13,7 @@ function generateTh(row, txt, clazz) {
     row.appendChild(th);
 }
 
+//------------------------------------------------------------------------------------------
 function generateHtmlTableHead(table) {
   let thead = table.createTHead();
   let row = thead.insertRow();
@@ -25,39 +26,12 @@ function generateHtmlTableHead(table) {
       if ( j > DateUtil.date2String(CTX.getEnd()) ) {
         break;
       }
-      
       txt=j;
       //console.log(txt);
       if ( txt.endsWith("M") ) {
         txt=txt.substr(0,10);
       } else {
-        // quick and dirty way to get day from class !!!!!
-        switch(CTX.getDayProps()[j]) {
-          case 'd0' :
-            txt="Sun";
-            break;
-          case 'd1' :
-            txt="Mon";
-            break;
-          case 'd2' :
-            txt="Tue";
-            break;
-          case 'd3' :
-            txt="Wed";
-            break;
-          case 'd4' :
-            txt="Thu";
-            break;
-          case 'd5' :
-            txt="Fri";
-            break;
-          case 'd6' :
-            txt="Sat";
-            break;
-          default :
-            txt="Tod";
-        }
-        
+        txt=new Date(txt.substr(0,10)).toDateString().substring(0,3)
       }
       generateTh(row,txt.replace("-","<br>").replace("-","/"),CTX.getDayProps()[j]+"h");
     }
@@ -70,6 +44,7 @@ function getHrefFromEvent(line,event) {
   return(line+"_"+event["when"]);
 }
 
+
 function generateTd(line,row, event, col, clazz) {
     //console.log("generateTd() line : " + line + " row " + row + " event " + JSON.stringify(event) + " col : " + col)
     let cell = row.insertCell();
@@ -78,9 +53,6 @@ function generateTd(line,row, event, col, clazz) {
         cell.classList.add(clazz);
       return
     }
-
-    
-    
     if ( (Object.keys(event).length > 0) && ("kind" in event) ) {
       let text = document.createTextNode(event["kind"]);
       let content; 
@@ -226,6 +198,11 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
 
 
 function keepThisDay(when) {  
+  testIt=document.getElementById("weekend").value
+  console.log("keepThisDay() testIt  " + testIt);
+  if ( CTX._weekend ) {
+    return(true)
+  }
   dayOfWeek=new Date(when.substring(0,10)).getDay()
   console.log("keepThisDay() when  " + when + " dayOfWeek " + dayOfWeek.toString());
   if ( dayOfWeek == 0 || dayOfWeek == 6) {
@@ -547,6 +524,8 @@ function modifyDuration(duration) {
 }
 
 
+
+
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function filterItems() {
   var input, filter, table, tr, td, i, txtValue;
@@ -582,6 +561,12 @@ function filterItems() {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
+function toggleWeekend() {
+  console.log(" toggleWeekend() " + document.getElementById("weekend").value)
+  CTX._weekend=!CTX._weekend
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
 function createPage(myPlanning,myStyles) {
   if ( Object.keys(CTX).length == 0 ) {
     console.log("Create page called CTX empty ")
@@ -601,7 +586,17 @@ function createPage(myPlanning,myStyles) {
   if (duration.length == 0) {
     document.getElementById("duration").value=21
   }
-   
+  let cweekend=document.getElementById("weekend")
+  //console.log("Create page : cweekend " + cweekend)
+  let weekend
+  if (cweekend.checked ) {
+    weekend=true
+  } else {
+    weekend=false
+  }
+  
+  console.log("Create page : weekend " + weekend)
+
   if (myPlanning == null ) {
     console.log("Create page called : myPlanning not found")
     return
@@ -611,6 +606,7 @@ function createPage(myPlanning,myStyles) {
   CTX={
     _start: document.getElementById("start").value,
     _end: document.getElementById("end").value,
+    _weekend:weekend,
     _duration: document.getElementById("duration").value,
     _daysList: [],
     _dayProps:{},
