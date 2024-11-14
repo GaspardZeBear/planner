@@ -95,7 +95,8 @@ function generateTd(line,row, event, col, clazz) {
         content.setAttribute("data-tootik",attrib+"\n")
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
         style=CTX._styles[event["kind"]]
-        if ( !style.includes(":") ) {
+        console.log("Style " + style)
+        if ( style !=null && !style.includes(":") ) {
           style="background-color :" + style
         }
         cell.setAttribute("style" , style)
