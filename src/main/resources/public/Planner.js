@@ -71,19 +71,20 @@ function getHrefFromEvent(line,event) {
 }
 
 function generateTd(line,row, event, col, clazz) {
-    //console.log("line : " + line + " row " + row + " event " + JSON.stringify(event) + " col : " + col)
+    //console.log("generateTd() line : " + line + " row " + row + " event " + JSON.stringify(event) + " col : " + col)
     let cell = row.insertCell();
     //console.log(event);
     if ( (Object.keys(event).length == 0)) {
         cell.classList.add(clazz);
       return
     }
+
+    
     
     if ( (Object.keys(event).length > 0) && ("kind" in event) ) {
       let text = document.createTextNode(event["kind"]);
       let content; 
       if ( col > 1 ) {
-        console.log("GenerateTd() line " + line + " event " + JSON.stringify(event));
         content=document.createElement('a');
         text = document.createTextNode(event["kind"].substring(0,4));
         let attrib;
@@ -95,7 +96,7 @@ function generateTd(line,row, event, col, clazz) {
         content.setAttribute("data-tootik",attrib+"\n")
         content.setAttribute("data-tootik-conf","invert multiline square shadow")
         style=CTX._styles[event["kind"]]
-        console.log("Style " + style)
+        //console.log("Style " + style)
         if ( style !=null && !style.includes(":") ) {
           style="background-color :" + style
         }
@@ -164,11 +165,13 @@ function updateVirtualTableCell(line,event) {
     // if virtual table entry <name><suffixed date> already contains an event
     // must create a new table line with new name : <name_<num>+><suffixed date>
     // (<num> Each name has a counter !)
+
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length == 0) {
       CTX.getVirtualTable()[line][when]=event
       CTX.getNamesCounter()[line]=0
       return
     }
+
     //console.log("updateVirtualTableCell virtual table entry contains something 1" )
     if (   Object.keys(CTX.getVirtualTable()[line][when]).length > 0 ) {
       //console.log("updateVirtualTableCell virtual table entry contains something 2" )
@@ -221,6 +224,17 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
   updateVirtualTableCell(line,nEvent);
 }
 
+
+function keepThisDay(when) {  
+  dayOfWeek=new Date(when.substring(0,10)).getDay()
+  console.log("keepThisDay() when  " + when + " dayOfWeek " + dayOfWeek.toString());
+  if ( dayOfWeek == 0 || dayOfWeek == 6) {
+    return(false)
+  } else {
+    return(true)
+  }
+} 
+
 //-------------------------------------------------------------------------------------------------------
 // when contains a entire date (ex 2024-11-05)  or entire date with A or M suffix (ex 2024-11-05A)
 function simpleWhenVirtualTable(line,event) {
@@ -245,7 +259,11 @@ function simpleWhenVirtualTable(line,event) {
   let nEvent=JSON.parse(JSON.stringify(event));
   nEvent["line"]=line;
   //console.log("simpleWhenVirtualTable nEvent " + JSON.stringify(nEvent))
-  
+
+  if (! keepThisDay(DateUtil.date2String(event["when"]))) {
+    return
+  }
+
   // if entire day (no A or M suffix) 
   if (event["when"].length == 10) {
     updateVirtualTableCellWithSuffix(line,event,"M");
@@ -282,20 +300,22 @@ function multipleWhensVirtualTable(line,event) {
     return
   }
 
-  console.log("multipleWhensVirtualTable() accept " + event["when"])
+  //console.log("multipleWhensVirtualTable() accept " + event["when"])
   // Build an list of dates (suffix A or M) for new events
   let loop = new Date(nstart);
   let dates=[];
   while(loop <= nend){
     let day=DateUtil.date2day(loop);
-    console.log("multipleWhensVirtualTable() add " + day);
-    dates.push(day+"M");
-    dates.push(day+"A");
+    //console.log("multipleWhensVirtualTable() add " + day);
+    if (keepThisDay(DateUtil.date2String(loop))) {
+      dates.push(day+"M");
+      dates.push(day+"A");
+    }
     let newDate = loop.setDate(loop.getDate() + 1);
     loop = new Date(newDate);
   }
   
-  console.log("multipleWhensVirtualTable() dates before  " + dates);
+  //console.log("multipleWhensVirtualTable() dates before  " + dates);
   if ( whens[0].length == 10 ) {
     whens[0] += "M"
   }
@@ -310,21 +330,21 @@ function multipleWhensVirtualTable(line,event) {
     //dates.pop();
   }
 
-  console.log("multipleWhensVirtualTable() dates after  " + dates);
+  //console.log("multipleWhensVirtualTable() dates after  " + dates);
   // for each date (with suffix A or M), create a new event
   for (d of dates) {
     let nEvent=JSON.parse(JSON.stringify(event));;
     nEvent["when"]=d;
-    console.log("multipleWhensVirtualTable() new event  " + JSON.stringify(nEvent));
+    //console.log("multipleWhensVirtualTable() new event  " + JSON.stringify(nEvent));
     updateVirtualTableCell(line,nEvent);
   }
 }
 
 //-------------------------------------------------------------------------------------------------------
 function whensVirtualTable(line,event) {
-  console.log("---- Begin whensVirtualTable");
-  console.log("line " + JSON.stringify(line));
-  console.log("event " + JSON.stringify(event));
+  //console.log("---- Begin whensVirtualTable");
+  //console.log("line " + JSON.stringify(line));
+  //console.log("event " + JSON.stringify(event));
   event["date"]="";
   if ( event["when"].includes("@") ) {
     multipleWhensVirtualTable(line,event);
@@ -336,13 +356,13 @@ function whensVirtualTable(line,event) {
 
 //-------------------------------------------------------------------------------------------------------
 function isValidLine(line) {
-  console.log("isValidLine() " + JSON.stringify(line))
+  //console.log("isValidLine() " + JSON.stringify(line))
   if (! line.hasOwnProperty("name") ) {
-    console.log("isValidLine() no name !")
+    //console.log("isValidLine() no name !")
     return(false)
   }
   if ( line["name"].length == 0) {
-    console.log("isValidLine()  name length = 0! ")
+    //console.log("isValidLine()  name length = 0! ")
     return(false)
   }
   if (! line.hasOwnProperty("events") ) {
@@ -386,7 +406,7 @@ function fillInVirtualTable() {
   for (let item of CTX._myPlanning) {
     //console.log("fillInVirtualTable() Item : " + JSON.stringify(item));
     if ( !isValidLine(item) ) {
-      console.log("fillInVirtualTable() Item : isNotValid");
+      //console.log("fillInVirtualTable() Item : isNotValid");
       continue
     }
     console.log("fillInVirtualTable() Item : isValid");
@@ -629,7 +649,7 @@ function createPage(myPlanning,myStyles) {
   generateHtmlTableHead(table); // then the head
   
   var datas = document.querySelector("#details");
-  fillDetailsTable(datas) ;
+  //fillDetailsTable(datas) ;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
