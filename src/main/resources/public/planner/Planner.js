@@ -46,18 +46,6 @@ function fillDetailsTable(datas) {
   }
 }
 
-//-------------------------------------------------------------------------------------------------------
-function XinitDaysList() {
-   let loop = new Date(CTX.getStart());
-   while(loop <= CTX.getEnd()){
-    let day=DateUtil.date2day(loop);
-    CTX.getDaysList().push(day + "M")
-    CTX.getDaysList().push(day + "A")
-    let newDate = loop.setDate(loop.getDate() + 1);
-    loop = new Date(newDate);
-   }
-}
-
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function initPublicHolidays(year) {
   for (let d of DateUtil.joursFeries(year)) {
@@ -162,21 +150,14 @@ function createPage(myPlanning,myStyles) {
     weekend=false
   }
   
-  console.log("Create page : weekend " + weekend)
-
   if (myPlanning == null ) {
     console.log("Create page called : myPlanning not found")
     return
   } 
-  fake=[{"toto":1234},
-        {"name":"totoKO"},
-        {"name":"OK",
-          "events":[{"kind":"gookind","when":"2024-11-01"}]
-        }]
+
   vt=new VirtualTable(myPlanning)
   console.log("Create page : vt " + JSON.stringify(vt.getVirtualTable()))
   
-  //console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
   maxDate=DateUtil.getMondayAsString(52)
   CTX={
     _start: document.getElementById("start").value,
@@ -208,7 +189,6 @@ function createPage(myPlanning,myStyles) {
     getDuration  : function () { return(this._duration) },
   }
 
-  //initDaysList()
   initPublicHolidays("2022")
   initPublicHolidays("2023")
   initPublicHolidays("2024")

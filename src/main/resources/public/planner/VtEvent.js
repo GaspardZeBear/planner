@@ -15,7 +15,7 @@ class VtEvent {
   getNote() { return(this.note) }
   getWhen() { return(this.when) }
   addProcessing(msg) {
-    this.processing = this.processing + "&" + msg
+    this.processing = this.processing + "<br/>" + msg
   }
   getProcessing() {
     return(this.processing)

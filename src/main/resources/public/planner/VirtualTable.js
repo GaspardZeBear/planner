@@ -123,14 +123,15 @@ class VirtualTable {
             // collision
             if ( k1 == k2 ) {
               collision++;
+              let newName2
+              let newMap2=new Map()
               existingMap.get(k1).setKind("Multi")
               existingMap.get(k1).addProcessing(v2.getKind() + ";" +v2.getProcessing())
               let i=1
               while (this.vt.has(this.getNewName(name,i)) ) {
                 i++
               }
-              let newName2=this.getNewName(name,i)
-              let newMap2=new Map()
+              newName2=this.getNewName(name,i)
               newMap2.set(k2,v2)
               this.vt.set(newName2,newMap2)
             }
