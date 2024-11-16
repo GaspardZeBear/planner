@@ -41,10 +41,10 @@ class HtmlVt {
   generateTh(row,txt,clazz) {
     let th = document.createElement("th");
     let sp=txt.split("<br>");
-    for (s of sp) {
+    for (let s of sp) {
       let text = document.createTextNode(s);
       th.appendChild(text);
-      br=document.createElement("br");
+      let br=document.createElement("br");
       th.appendChild(br);
       th.classList.add(clazz);
     }
@@ -55,7 +55,7 @@ class HtmlVt {
   createHeaderRow() {
     let thead = this.table.createTHead();
     let row = thead.insertRow();
-    generateTh(row,"Item<br>Date","dummy");
+    this.generateTh(row,"Item<br>Date","dummy");
     //generateTh(row,"","dummy");
     
     for (let d of this.days) {
@@ -140,7 +140,7 @@ class HtmlVt {
 	  details.append(p)
 	  details.append(summary)
     //cell.appendChild(details);
-    content.href="#"+getHrefFromEvent(line,vtEvent.getWhen());
+    content.href="#"+this.getHrefFromEvent(line,vtEvent.getWhen());
     content.append(text);
     cell.appendChild(content);
     content.append(text);
