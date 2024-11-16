@@ -79,10 +79,7 @@ class VirtualTable {
         return(false)
       } 
       if ( !isNaN(event["when"]) ) {
-        //this.trace("isValidLine() event " + JSON.stringify(event))
-        //let d = new Date(Math.round((event["when"] - 25569) * 86400 * 1000));
-        //event["when"]=DateUtil.date2String(d);
-        //console.log("isValidLine event.when " + event["when"]);
+
       } else if ( event["when"].length < 10 ) {
         this.error(this.checkItem01.name + "() " + item["name"] + " " +  "  when length < 10!")
         return(false)

@@ -56,8 +56,6 @@ class HtmlVt {
     let thead = this.table.createTHead();
     let row = thead.insertRow();
     this.generateTh(row,"Item<br>Date","dummy");
-    //generateTh(row,"","dummy");
-    
     for (let d of this.days) {
       let txt
       if ( d.endsWith("M") ) {
@@ -114,11 +112,6 @@ class HtmlVt {
     content=document.createElement('a');
     text = document.createTextNode(vtEvent.getKind().substring(0,4));
     let attrib;
-    //if ( vtEvent.getKind() == "Multi" ) {
-    //  attrib=vtEvent.getprocessing() + ";" + vtEvent.getWhen()
-    //} else {
-    //  attrib=vtEvent.getKind() + ";" + vtEvent.getNote()  + ";" + vtEvent.getWhen()
-    //}
     attrib=vtEvent.getProcessing()  + ";" + vtEvent.getWhen()
     content.setAttribute("data-tootik",attrib+"\n")
     content.setAttribute("data-tootik-conf","invert multiline square shadow")
@@ -126,7 +119,6 @@ class HtmlVt {
     if ( this.styles.hasOwnProperty(vtEvent.getKind()) ) {
       style=this.styles[vtEvent.getKind()]
     }
-    //console.log("Style " + style)
     if ( style !=null && !style.includes(":") ) {
       style="background-color :" + style
     }
@@ -152,7 +144,6 @@ class HtmlVt {
   createBodyRows() {
   //console.log(items);
     let names=Array.from(this.vt.keys()).sort()
-    //names.sort()
     for (let line of names ) {
       let row = this.table.insertRow();
       // fill in  first columns

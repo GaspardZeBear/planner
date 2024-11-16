@@ -47,7 +47,7 @@ function fillDetailsTable(datas) {
 }
 
 //-------------------------------------------------------------------------------------------------------
-function initDaysList() {
+function XinitDaysList() {
    let loop = new Date(CTX.getStart());
    while(loop <= CTX.getEnd()){
     let day=DateUtil.date2day(loop);
@@ -208,21 +208,15 @@ function createPage(myPlanning,myStyles) {
     getDuration  : function () { return(this._duration) },
   }
 
-  initDaysList()
+  //initDaysList()
   initPublicHolidays("2022")
   initPublicHolidays("2023")
   initPublicHolidays("2024")
   initPublicHolidays("2025")
-  //initVirtualTable();
-  //fillInVirtualTable();
-  var table = document.querySelector("#planning");
-  table.innerHTML=""
-  //generateHtmlTable(table); // generate the table first
-  //generateHtmlTableHead(table); // then the head
 
-  var tableN=document.querySelector("#planningN");
-  tableN.innerHTML=""
-  new HtmlVt(CTX.getStart(),CTX.getEnd(),tableN,vt.getVirtualTable(),CTX._styles)
+  var table=document.querySelector("#planning");
+  table.innerHTML=""
+  new HtmlVt(CTX.getStart(),CTX.getEnd(),table,vt.getVirtualTable(),CTX._styles)
   
   var datas = document.querySelector("#details");
   //fillDetailsTable(datas) ;

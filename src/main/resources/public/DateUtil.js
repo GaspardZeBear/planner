@@ -1,12 +1,18 @@
 class DateUtil {
 
+  static daysOff
+
+  static {
+      DateUtil.daysOff=DateUtil.joursFeries("2024")
+  }
+
   //-------------------------------------------------------------------------------------------------------
   static joursFeries (an) {
 	  var JourAn = new Date(an, "00", "01")
 	  var FeteTravail = new Date(an, "04", "01")
 	  var Victoire1945 = new Date(an, "04", "08")
     var FeteNationale = new Date("2022","06", "14","01","00","00")
-    var FeteNationale = new Date("2022-07-14T00:00")
+    var FeteNationale = new Date(an, "05","14")
 	  var Assomption = new Date(an, "07", "15")
 	  var Toussaint = new Date(an, "10", "01")
 	  var Armistice = new Date(an, "10", "11")
