@@ -199,12 +199,12 @@ function updateVirtualTableCellWithSuffix(line,event,suffix) {
 
 function keepThisDay(when) {  
   testIt=document.getElementById("weekend").value
-  console.log("keepThisDay() testIt  " + testIt);
+  //console.log("keepThisDay() testIt  " + testIt);
   if ( CTX._weekend ) {
     return(true)
   }
   dayOfWeek=new Date(when.substring(0,10)).getDay()
-  console.log("keepThisDay() when  " + when + " dayOfWeek " + dayOfWeek.toString());
+  //console.log("keepThisDay() when  " + when + " dayOfWeek " + dayOfWeek.toString());
   if ( dayOfWeek == 0 || dayOfWeek == 6) {
     return(false)
   } else {
@@ -601,6 +601,14 @@ function createPage(myPlanning,myStyles) {
     console.log("Create page called : myPlanning not found")
     return
   } 
+  fake=[{"toto":1234},
+        {"name":"totoKO"},
+        {"name":"OK",
+          "events":[{"kind":"gookind","when":"2024-11-01"}]
+        }]
+  vt=new VirtualTable(myPlanning)
+  console.log("Create page : vt " + JSON.stringify(vt.getVirtualTable()))
+  
   //console.log("Create page : myPlanning " + JSON.stringify(myPlanning))
   maxDate=DateUtil.getMondayAsString(52)
   CTX={
@@ -637,12 +645,17 @@ function createPage(myPlanning,myStyles) {
   initPublicHolidays("2022")
   initPublicHolidays("2023")
   initPublicHolidays("2024")
-  initVirtualTable();
-  fillInVirtualTable();
+  initPublicHolidays("2025")
+  //initVirtualTable();
+  //fillInVirtualTable();
   var table = document.querySelector("#planning");
   table.innerHTML=""
-  generateHtmlTable(table); // generate the table first
-  generateHtmlTableHead(table); // then the head
+  //generateHtmlTable(table); // generate the table first
+  //generateHtmlTableHead(table); // then the head
+
+  var tableN=document.querySelector("#planningN");
+  tableN.innerHTML=""
+  new HtmlVt(CTX.getStart(),CTX.getEnd(),tableN,vt.getVirtualTable(),CTX._styles)
   
   var datas = document.querySelector("#details");
   //fillDetailsTable(datas) ;

@@ -15,6 +15,11 @@
 <script type="text/javascript" src="DateUtil.js"></script>
 <script type="text/javascript" src="Planner.js"></script>
 
+<script type="text/javascript" src="Events.js"></script>
+<script type="text/javascript" src="VtEvent.js"></script>
+<script type="text/javascript" src="VirtualTable.js"></script>
+<script type="text/javascript" src="HtmlVt.js"></script>
+
 <script>
 
 var xhttpFiles = new XMLHttpRequest();
@@ -108,6 +113,13 @@ function buildPlanningFromExcelFile(excelFileName) {
     <div class="freezeTable">
     <table id="planning">
     </table>
+    </div>
+
+    <br/>
+    <br/>
+    <div class="freezeTable">
+      <table id="planningN">
+      </table>
     </div>
 
     <h2>Details</h2>

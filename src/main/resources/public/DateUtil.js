@@ -49,6 +49,11 @@ class DateUtil {
     return(nd)
   }
 
+  //-----------------------------------------------------------------------------------
+  static dayOfWeek(d) {
+    return(new Date(d.substring(0,10)).getDay())
+  }
+
   //-------------------------------------------------------------------------------------------------------
   static date2day(d) {
     let l=d.toLocaleString("fr-FR").substring(0,10);

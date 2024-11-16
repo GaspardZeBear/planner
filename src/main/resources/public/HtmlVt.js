@@ -58,7 +58,7 @@ class HtmlVt {
     generateTh(row,"Item<br>Date","dummy");
     //generateTh(row,"","dummy");
     
-    for (d of this.days) {
+    for (let d of this.days) {
       let txt
       if ( d.endsWith("M") ) {
         txt=d.substr(0,10);
@@ -114,11 +114,12 @@ class HtmlVt {
     content=document.createElement('a');
     text = document.createTextNode(vtEvent.getKind().substring(0,4));
     let attrib;
-    if ( vtEvent.getKind()["kind"] == "Multi" ) {
-      attrib=vtEvent.getprocessing() + ";" + vtEvent.getWhen()
-    } else {
-      attrib=vtEvent.getKind() + ";" + vtEvent.getNote()  + ";" + vtEvent.getWhen()
-    }
+    //if ( vtEvent.getKind() == "Multi" ) {
+    //  attrib=vtEvent.getprocessing() + ";" + vtEvent.getWhen()
+    //} else {
+    //  attrib=vtEvent.getKind() + ";" + vtEvent.getNote()  + ";" + vtEvent.getWhen()
+    //}
+    attrib=vtEvent.getProcessing()  + ";" + vtEvent.getWhen()
     content.setAttribute("data-tootik",attrib+"\n")
     content.setAttribute("data-tootik-conf","invert multiline square shadow")
     let style
@@ -131,10 +132,10 @@ class HtmlVt {
     }
     cell.setAttribute("style" , style)
     cell.classList.add(vtEvent.getKind());
-    details=document.createElement('details')
-	  p=document.createElement('p')
+    let details=document.createElement('details')
+	  let p=document.createElement('p')
 	  p.append("balbala")
-	  summary=document.createElement('summary')
+	  let summary=document.createElement('summary')
 	  summary.append(text)
 	  details.append(p)
 	  details.append(summary)

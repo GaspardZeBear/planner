@@ -4,16 +4,19 @@ class VirtualTable {
   #items
   #infos
   #errors
+  #vt
 
   constructor(items) {
     this.initialItems=items
     this.infos=[]
     this.errors=[]
     this.items=[]
+    this.vt=new Map()
     this.list(this.initialItems)
     this.checkItems01()
     this.list(this.items)
     this.showInfo()
+    this.build()
   }
 
   //-----------------------------------------------------------------------------------------
@@ -22,6 +25,11 @@ class VirtualTable {
     for (let item of items) {
       this.info(JSON.stringify(item))
     }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  getVirtualTable() {
+    return(this.vt)
   }
   
   //-----------------------------------------------------------------------------------------
@@ -84,17 +92,62 @@ class VirtualTable {
     return(true)
   }
 
-//-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
   checkItems01() {
     for (let item of this.initialItems) {
       if (this.checkItem01(item)) {
         this.items.push(item)
       }
     }
-    for (let ok of this.items) {
-      //console.log("OK !!!!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(ok))
+  }
+
+  //-----------------------------------------------------------------------------------------
+  build() {
+    for (let item of this.items) {
+      this.addItemToVt(item)
     }
- 
-    
+  } 
+
+  //-----------------------------------------------------------------------------------------
+  getNewName(name,counter) {
+    return(name+"_"+ counter.toString().padStart(2, '0') + '+')
+  }
+  //-----------------------------------------------------------------------------------------
+  addItemToVt(item) {
+    for (let event of item["events"]) {
+      let events=new Events(event)
+      let vtEventsMap=events.getVtEventsMap()
+      let name=item["name"]
+      if (this.vt.has(name)) {
+        let existingMap=this.vt.get(name)
+        let collision=0
+        for (const [k1,v1]  of existingMap.entries() ) {
+          for (const [k2,v2] of  vtEventsMap.entries() ) {
+            // collision
+            if ( k1 == k2 ) {
+              collision++;
+              existingMap.get(k1).setKind("Multi")
+              existingMap.get(k1).addProcessing(v2.getKind() + ";" +v2.getProcessing())
+              let i=1
+              while (this.vt.has(this.getNewName(name,i)) ) {
+                i++
+              }
+              let newName2=this.getNewName(name,i)
+              let newMap2=new Map()
+              newMap2.set(k2,v2)
+              this.vt.set(newName2,newMap2)
+            }
+          } 
+        }
+        // no collision, merge maps 
+        if ( collision == 0 ) {
+          for (const [k,v] of vtEventsMap.entries() ) {
+            this.vt.get(name).set(k,v)
+          }
+        }
+      } else {
+        this.vt.set(name,vtEventsMap)
+      }
+    }
   }
 }

@@ -7,7 +7,7 @@ class VtEvent {
     this.kind=kind
     this.when=when
     this.note=note
-    this.processing=""
+    this.processing=this.kind + ";" + note
   }
 
   getKind() { return(this.kind) }
@@ -15,7 +15,10 @@ class VtEvent {
   getNote() { return(this.note) }
   getWhen() { return(this.when) }
   addProcessing(msg) {
-    this.processing += ";" + msg
+    this.processing = this.processing + "&" + msg
+  }
+  getProcessing() {
+    return(this.processing)
   }
 
 
