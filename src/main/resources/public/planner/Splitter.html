@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<title>Pdf Splitter</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="Custom.css">
+<script type="text/javascript" src="Util.js"></script>
+
+<script>
+
+function pdfFun() {
+    console.log("pdfFun")
+}
+
+var xhttpFiles = new XMLHttpRequest();
+xhttpFiles.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       
+       pdfFiles = JSON.parse(xhttpFiles.responseText);
+       console.log("pdfFiles : " + JSON.stringify(pdfFiles))
+       Util.buildFilesList("pdfFiles",pdfFiles,splitPdfFile);
+       }
+};
+//http.open("GET", "Planning.txt", true);
+xhttpFiles.open("GET", "/pdflist", true);
+xhttpFiles.send();
+
+
+
+function splitPdfFile(pdfFileName) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       console.log("Split over ")
+       newFiles = JSON.parse(xhttp.responseText);
+       console.log("pdfFiles : " + JSON.stringify(newFiles))
+       //createPage(myPlanning["Planning"],myPlanning["Styles"]);
+    }
+  };
+  xhttp.open("GET", "/pdfsplit/"+pdfFileName, true);
+  xhttp.send();
+}
+
+</script>
+</head>
+
+<body>
+    <h2>Choose PDF to split</h2>
+    <div id="pdfFiles">
+    </div>
+
+    <h2>Work on selected PDF</h2>
+    <div id="generatedPdfFiles">
+    </div>
+    
+
+    <h2>Details</h2>
+    <table id="details">
+    </table>
+</body>
+</html>
