@@ -25,7 +25,9 @@ xhttpFiles.onreadystatechange = function() {
 xhttpFiles.open("GET", "/pdflist", true);
 xhttpFiles.send();
 
-
+function getOnlyFilename(f) {
+  return(f.substring(f.lastIndexOf("/")+1))
+}
 
 function splitPdfFile(pdfFileName) {
   var xhttp = new XMLHttpRequest();
@@ -37,7 +39,8 @@ function splitPdfFile(pdfFileName) {
        listGeneratedFiles(generatedFiles)
     }
   };
-  let f=pdfFileName.substring(pdfFileName.lastIndexOf("/")+1)
+  //let f=pdfFileName.substring(pdfFileName.lastIndexOf("/")+1)
+  let f=getOnlyFilename(pdfFileName)
   //xhttp.open("GET", "/pdfsplit/"+pdfFileName, true);
   xhttp.open("GET", "/pdfsplit/"+f, true);
   xhttp.send();
@@ -56,8 +59,12 @@ function listGeneratedFiles(generatedFiles) {
   for (let f of generatedFiles) {
     let row=table.insertRow()
     let td=document.createElement("td")
+    let href=document.createElement('a');
+    href.href="/download/pdf/dummy/"+getOnlyFilename(f)
+    href.append(f)
     let text = document.createTextNode(f);
-    td.appendChild(text);
+    td.append(href)
+    //td.appendChild(text);
     row.appendChild(td);
   }
 }
