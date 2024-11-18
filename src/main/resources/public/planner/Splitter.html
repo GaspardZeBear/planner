@@ -87,6 +87,7 @@ function listGeneratedFiles(generatedFiles) {
     let td=document.createElement("td")
     let href=document.createElement('a');
     href.href="/download/pdf/dummy/"+getOnlyFilename(f)
+    href.setAttribute("target","pdf")
     href.append(f)
     let text = document.createTextNode(f);
     td.append(href)
