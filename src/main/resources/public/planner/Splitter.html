@@ -32,13 +32,31 @@ function splitPdfFile(pdfFileName) {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
        console.log("Split over ")
-       newFiles = JSON.parse(xhttp.responseText);
-       console.log("pdfFiles : " + JSON.stringify(newFiles))
-       //createPage(myPlanning["Planning"],myPlanning["Styles"]);
+       generatedFiles = JSON.parse(xhttp.responseText);
+       console.log("pdfFiles : " + JSON.stringify(generatedFiles))
+       listGeneratedFiles(generatedFiles)
     }
   };
   xhttp.open("GET", "/pdfsplit/"+pdfFileName, true);
   xhttp.send();
+}
+
+function listGeneratedFiles(generatedFiles) {
+  var table=document.querySelector("#generatedFiles");
+  table.innerHTML=""
+  let thead = table.createTHead();
+  let row = thead.insertRow();
+  let th = document.createElement("th");
+  let text = document.createTextNode("Generated");
+  th.appendChild(text);
+  row.appendChild(th);
+  for (let f of generatedFiles) {
+    let row=table.insertRow()
+    let td=document.createElement("td")
+    let text = document.createTextNode(f);
+    td.appendChild(text);
+    row.appendChild(td);
+  }
 }
 
 </script>
@@ -49,9 +67,9 @@ function splitPdfFile(pdfFileName) {
     <div id="pdfFiles">
     </div>
 
-    <h2>Work on selected PDF</h2>
-    <div id="generatedPdfFiles">
-    </div>
+    <h2>Generated PDF</h2>
+    <table id="generatedFiles">
+    </table>
     
 
     <h2>Details</h2>

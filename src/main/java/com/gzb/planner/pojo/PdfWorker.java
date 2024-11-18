@@ -26,8 +26,6 @@ public class PdfWorker {
   public ArrayList<String> split() {
     try  {  
       itemList = new ArrayList<String>();
-      itemList.add("toto");
-      itemList.add("titi");
       readPDF();
     } catch(Exception e)  {  
       e.printStackTrace();  
@@ -41,15 +39,9 @@ public class PdfWorker {
       PdfReader reader = new PdfReader(this.pdfFile);
       PdfDocument pdfDocument=new PdfDocument(reader);
       System.out.println("Document Metadata");
-     // System.out.println(reader.().toString());
-      System.out.println("--");
-
       int numPages = pdfDocument.getNumberOfPages();
       for (int index =1; index <= numPages; index++) {
-         //byte[] pageBuf = reader.getPageContent(index);
-         //String pageContent = new String(pageBuf);
-         //System.out.println("Page - " + index);
-         String pdfName=this.pdfFile+"-"+String.valueOf(index)+".pdf";
+         String pdfName="splitter/" + this.pdfFile+"-"+String.valueOf(index)+".pdf";
          System.out.println("Creating " + pdfName);
          createOnePagePDF(pdfDocument, pdfName, index);
          System.out.println("");
@@ -63,8 +55,6 @@ public class PdfWorker {
    //---------------------------------------------------------------------------------------------
  public void createOnePagePDF(PdfDocument pdfDocument, String pdfName, int index) {
    try {
-     //PdfDocument document= new P();
-     
      FileOutputStream fileOutputStream=new FileOutputStream(pdfName);
      PdfWriter pdfWriter=new PdfWriter(pdfName);
      PdfDocument document=new PdfDocument(pdfWriter);
@@ -75,6 +65,7 @@ public class PdfWorker {
      document.close();
      fileOutputStream.flush();
      fileOutputStream.close();
+     this.itemList.add(pdfName);
     }  catch(Exception exp) {
       System.out.println(exp.getMessage());
     }
