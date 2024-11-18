@@ -6,6 +6,11 @@ static buildFilesList(selector,pFilesList,action) {
   console.log("fFiles " + JSON.stringify(filesList))
   var filesList = document.createElement("select");
   filesList.id=selector;
+  //document.querySelector("#" + selector).removeChild()
+  const element = document.querySelector("#" + selector);
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
   document.querySelector("#" + selector).appendChild(filesList)
   let selected = false
   var option=document.createElement("option")

@@ -8,27 +8,44 @@
 
 <script>
 
-function pdfFun() {
-    console.log("pdfFun")
+//-------------------------------------------------------------------------------
+async function uploadFile() {
+  let formData = new FormData(); 
+  formData.append("file", fileupload.files[0]);
+  let response = await fetch('/download/upload', {
+    method: "POST", 
+    body: formData
+  }); 
+
+  if (response.status == 200) {
+    buildPdfList()
+    alert("File successfully uploaded.");
+  }
 }
 
-var xhttpFiles = new XMLHttpRequest();
-xhttpFiles.onreadystatechange = function() {
+//-------------------------------------------------------------------------------
+function buildPdfList() {
+  var xhttpFiles = new XMLHttpRequest();
+  xhttpFiles.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-       
        pdfFiles = JSON.parse(xhttpFiles.responseText);
        console.log("pdfFiles : " + JSON.stringify(pdfFiles))
        Util.buildFilesList("pdfFiles",pdfFiles,splitPdfFile);
        }
-};
+  };
 //http.open("GET", "Planning.txt", true);
-xhttpFiles.open("GET", "/pdflist", true);
-xhttpFiles.send();
+  xhttpFiles.open("GET", "/pdflist", true);
+  xhttpFiles.send();
+}
 
+buildPdfList();
+
+//-------------------------------------------------------------------------------
 function getOnlyFilename(f) {
   return(f.substring(f.lastIndexOf("/")+1))
 }
 
+//-------------------------------------------------------------------------------
 function splitPdfFile(pdfFileName) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -46,8 +63,8 @@ function splitPdfFile(pdfFileName) {
   xhttp.send();
 }
 
+//-------------------------------------------------------------------------------
 function listGeneratedFiles(generatedFiles) {
- 
   var table=document.querySelector("#generatedFiles");
   table.innerHTML=""
   let thead = table.createTHead();
@@ -73,11 +90,17 @@ function listGeneratedFiles(generatedFiles) {
 </head>
 
 <body>
-    <h2>Choose PDF to split</h2>
+  
+  <h2>Choose PDF to Upload</h2>
+
+    <input id="fileupload" type="file" name="fileupload" /> 
+    <button id="upload-button" onclick="uploadFile()"> Upload </button>
+
+  <h2>Choose PDF to split</h2>
     <div id="pdfFiles">
     </div>
 
-    <h2>Generated PDF</h2>
+  <h2>Generated PDF</h2>
     <a href="/download/zip">Download ZIP </a>
     <table id="generatedFiles">
     </table>

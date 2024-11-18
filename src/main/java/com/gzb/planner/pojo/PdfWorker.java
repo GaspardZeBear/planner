@@ -31,9 +31,9 @@ public class PdfWorker {
       //File file = new File("splitter");
       for (File subfile : file.listFiles()) {
              // delete files and empty subfolders
-        //subfile.delete();
-        System.out.println(subfile);
-      }
+        System.out.println("Delete " + subfile);
+        subfile.delete();
+         }
     }
 
   //---------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ public class PdfWorker {
       System.out.println("readPDF() ");
       PdfReader reader = new PdfReader("splitter/"+this.pdfFile);
       PdfDocument pdfDocument=new PdfDocument(reader);
-      System.out.println("Document Metadata");
+      //System.out.println("Document Metadata");
       int numPages = pdfDocument.getNumberOfPages();
       for (int index =1; index <= numPages; index++) {
          String pdfName="splitter/generated/" + this.pdfFile+"-"+String.valueOf(index)+".pdf";
