@@ -148,8 +148,8 @@ class HtmlVt {
       let row = this.table.insertRow();
       // fill in  first columns
       this.generateTd(line,row,null,1,"col_1");
-
-      if ( this.vt.get(line).size == 0 ) {
+      let xx=this.vt.get(line).size
+      if ( this.vt.get(line).size == null ) {
         this.generateTdRuler(row)
         continue
       } 

@@ -116,6 +116,7 @@ class VirtualTable {
       let events=new Events(event)
       let vtEventsMap=events.getVtEventsMap()
       let name=item["name"]
+      // if entry has a list, push else create the list and push
       if (this.vt.has(name)) {
         for (const [k,v] of vtEventsMap.entries() ) {
           let x=[]
@@ -127,6 +128,10 @@ class VirtualTable {
           this.vt.get(name).set(k,x)
         }
       } else {
+        if ( vtEventsMap.size == 0 ) {
+          this.vt.set(name,{})
+          return
+        }
         for (const [k,v] of vtEventsMap.entries() ) {
           let x=new Map()
           x.set(k,[v])
@@ -136,43 +141,4 @@ class VirtualTable {
     }
   }
 
-    //-----------------------------------------------------------------------------------------
-   XaddItemToVt(item) {
-    for (let event of item["events"]) {
-      let events=new Events(event)
-      let vtEventsMap=events.getVtEventsMap()
-      let name=item["name"]
-      if (this.vt.has(name)) {
-        let existingMap=this.vt.get(name)
-        let collision=0
-        for (const [k1,v1]  of existingMap.entries() ) {
-          for (const [k2,v2] of  vtEventsMap.entries() ) {
-            // collision
-            if ( k1 == k2 ) {
-              collision++;
-              let newName2
-              let newMap2=new Map()
-              existingMap.get(k1).setKind("Multi")
-              existingMap.get(k1).addProcessing(v2.getKind() + ";" +v2.getProcessing())
-              let i=1
-              while (this.vt.has(this.getNewName(name,i)) ) {
-                i++
-              }
-              newName2=this.getNewName(name,i)
-              newMap2.set(k2,v2)
-              this.vt.set(newName2,newMap2)
-            }
-          } 
-        }
-        // no collision, merge maps 
-        if ( collision == 0 ) {
-          for (const [k,v] of vtEventsMap.entries() ) {
-            this.vt.get(name).set(k,v)
-          }
-        }
-      } else {
-        this.vt.set(name,vtEventsMap)
-      }
-    }
-  }
 }
