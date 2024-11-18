@@ -109,8 +109,35 @@ class VirtualTable {
   getNewName(name,counter) {
     return(name+"_"+ counter.toString().padStart(2, '0') + '+')
   }
+
   //-----------------------------------------------------------------------------------------
   addItemToVt(item) {
+    for (let event of item["events"]) {
+      let events=new Events(event)
+      let vtEventsMap=events.getVtEventsMap()
+      let name=item["name"]
+      if (this.vt.has(name)) {
+        for (const [k,v] of vtEventsMap.entries() ) {
+          let x=[]
+          if ( this.vt.get(name).has(k) ) {
+            x=this.vt.get(name).get(k)
+          }
+          x.push(v)
+
+          this.vt.get(name).set(k,x)
+        }
+      } else {
+        for (const [k,v] of vtEventsMap.entries() ) {
+          let x=new Map()
+          x.set(k,[v])
+          this.vt.set(name,x)
+        }
+      }
+    }
+  }
+
+    //-----------------------------------------------------------------------------------------
+   XaddItemToVt(item) {
     for (let event of item["events"]) {
       let events=new Events(event)
       let vtEventsMap=events.getVtEventsMap()

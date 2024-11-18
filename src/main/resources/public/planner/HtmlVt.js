@@ -161,8 +161,15 @@ class HtmlVt {
           clazz="d" + DateUtil.dayOfWeek(d).toString()
         }
         if ( this.vt.get(line).has(d) ) {
-          let vtEvent=this.vt.get(line).get(d)
-          this.generateTd(line,row,vtEvent,3,clazz);
+          if (this.vt.get(line).get(d).length > 1 ) {
+            let multiVtEvent=new VtEvent("Multi",d,"*")
+            for (let vtEvent of this.vt.get(line).get(d)) {
+              multiVtEvent.addProcessing(vtEvent.getNote())
+            }
+            this.generateTd(line,row,multiVtEvent,3,clazz);
+          } else {
+            this.generateTd(line,row,this.vt.get(line).get(d)[0],3,clazz);
+          }
         } else  {
           this.generateTd(line,row,null,3,clazz);
         }
