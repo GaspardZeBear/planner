@@ -37,11 +37,14 @@ function splitPdfFile(pdfFileName) {
        listGeneratedFiles(generatedFiles)
     }
   };
-  xhttp.open("GET", "/pdfsplit/"+pdfFileName, true);
+  let f=pdfFileName.substring(pdfFileName.lastIndexOf("/")+1)
+  //xhttp.open("GET", "/pdfsplit/"+pdfFileName, true);
+  xhttp.open("GET", "/pdfsplit/"+f, true);
   xhttp.send();
 }
 
 function listGeneratedFiles(generatedFiles) {
+ 
   var table=document.querySelector("#generatedFiles");
   table.innerHTML=""
   let thead = table.createTHead();
@@ -68,6 +71,7 @@ function listGeneratedFiles(generatedFiles) {
     </div>
 
     <h2>Generated PDF</h2>
+    <a href="/download/zip">Download ZIP </a>
     <table id="generatedFiles">
     </table>
     

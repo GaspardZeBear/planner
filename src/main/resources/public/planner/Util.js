@@ -24,11 +24,17 @@ static buildFilesList(selector,pFilesList,action) {
     filesList.appendChild(option)
   }
   document.querySelector("#" + selector).addEventListener('change', function (e) { 
-    console.log("File selected" + e.target.value)
+    console.log("File selected change " + e.target.value)
     if ( e.target.value.length > 0 ) {
       action(e.target.value)
     }
-   },true);
-}
+    },true);
+  document.querySelector("#" + selector).addEventListener('click', function (e) { 
+    console.log("File selected click " + e.target.value)
+    if ( e.target.value.length > 0 ) {
+      action(e.target.value)
+    }
+    },true);
 
+  }
 }

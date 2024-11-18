@@ -40,7 +40,7 @@ public class DownloadController {
         // The file to be downloaded.
         //Path file = Paths.get(path+"/"+pdfFile);
         // Usin path maybe dangerous !!!!
-        Path file = Paths.get("splitter/"+pdfFile);
+        Path file = Paths.get("splitter/generated/"+pdfFile);
         response.setContentType("application/pdf");
         response.setContentLengthLong(Files.size(file));
         Files.copy(file, response.getOutputStream());
@@ -53,7 +53,7 @@ public class DownloadController {
         //List<Path> files = Arrays.asList(Paths.get("E:\\test.mp4"), 
         //                            Paths.get("E:\\node.txt"), 
         //                            Paths.get("E:\\keys.txt"));
-        PdfFiles xf=new PdfFiles("splitter");
+        PdfFiles xf=new PdfFiles("splitter/generated/");
         //ArrayList<String> afiles=xf.getPdfFiles();
         List<Path> files=xf.getPdfFiles().stream().map(x->Paths.get(x)).collect(Collectors.toList());
         response.setContentType("application/zip"); // zip archive format

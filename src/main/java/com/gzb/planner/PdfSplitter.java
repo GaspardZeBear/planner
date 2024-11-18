@@ -33,7 +33,7 @@ public class PdfSplitter {
 	@RequestMapping("pdflist")
   @ResponseBody
 	public String pdflist() {
-    PdfFiles xf=new PdfFiles(".");
+    PdfFiles xf=new PdfFiles("splitter");
 		ArrayList<String> xlst=xf.getPdfFiles();
 		JSONArray j=new JSONArray();
 		for ( String pdfFile : xlst) {
@@ -45,8 +45,8 @@ public class PdfSplitter {
 	@GetMapping("/pdfsplit/{pdfFile}")
   @ResponseBody
 	public String index(@PathVariable String pdfFile) {
-		PdfWorker pw=new PdfWorker(pdfFile);
-		ArrayList<String> generatedPdf = pw.split();
+		PdfWorker pdfWorker=new PdfWorker("splitter/"+pdfFile);
+		ArrayList<String> generatedPdf = pdfWorker.split();
 		JSONArray j=new JSONArray();
 		for ( String pdf : generatedPdf) {
       j.add(pdf);
