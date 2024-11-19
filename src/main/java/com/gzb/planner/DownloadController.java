@@ -51,7 +51,7 @@ public class DownloadController {
         Files.copy(file, response.getOutputStream());
     }
 
-    @GetMapping("/ical/{path}/{icalFile}")
+    @GetMapping("/ical/{path}/{icsFile}")
     public void downloadIcs (HttpServletRequest request, HttpServletResponse response,@PathVariable String path,@PathVariable String icsFile) throws IOException {
         
         // The file to be downloaded.

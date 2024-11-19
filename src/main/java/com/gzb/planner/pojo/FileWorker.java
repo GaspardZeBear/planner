@@ -20,6 +20,7 @@ public class FileWorker {
     this.glob=glob;
   }
 
+  //---------------------------------------------------------------------------------------------
   public ArrayList<String> getFiles() {
     Path path = Paths.get(this.dir);
     filesList = new ArrayList<String>();

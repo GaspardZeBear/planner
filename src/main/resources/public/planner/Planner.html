@@ -21,6 +21,7 @@
 <script type="text/javascript" src="HtmlVt.js"></script>
 <script type="text/javascript" src="Util.js"></script>
 <script type="text/javascript" src="Ics.js"></script>
+<script type="text/javascript" src="RruleParser.js"></script>
 
 <script>
 
@@ -83,12 +84,15 @@ function buildPlanningFromIcsFile(icsFileName) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-       console.log("ICS loaded : " + xhttp.responseText)
-       icsStr = JSON.parse(xhttp.responseText);
+       //console.log("ICS loaded : " + xhttp.responseText)
+       icsStr = xhttp.responseText;
        let ics=new Ics(icsStr)
+       myPlanning["Planning"] = ics.getPlanning()
+       myPlanning["Styles"] = {}
+       createPage(myPlanning["Planning"],{});
     }
   };
-  xhttp.open("GET", "/download/ical/dummy/gzb.ics", true);
+  xhttp.open("GET", "/download/ical/dummy/" + icsFileName, true);
   xhttp.send();
 }
 

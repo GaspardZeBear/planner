@@ -77,6 +77,28 @@ class DateUtil {
     }
   } 
 
+  //-------------------------------------------------------------------------------------------------------
+  static getListOfDates(start,count) { 
+    let nstart=new Date(start.substring(0,10));
+    let loop = new Date(nstart);
+    let dates=[];
+    for (let i=0;i<count;i++) {
+      let day=DateUtil.date2day(loop);
+      dates.push(day+"M");
+      dates.push(day+"A");
+      let newDate = loop.setDate(loop.getDate() + 1);
+      loop = new Date(newDate);
+    }
+    return(dates)
+  } 
+
+
+  
+  //-------------------------------------------------------------------------------------------------------
+  static  icsDateConvert(date) {
+    return(date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(5,7))
+
+  }
 
   //-------------------------------------------------------------------------------------------------------
   static  isWhenInStartEnd(when,start,end) {
