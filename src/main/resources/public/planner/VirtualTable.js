@@ -128,14 +128,18 @@ class VirtualTable {
           this.vt.get(name).set(k,x)
         }
       } else {
-        if ( vtEventsMap.size == 0 ) {
-          this.vt.set(name,{})
-          return
-        }
+        this.vt.set(name,new Map())
+        //if ( vtEventsMap.size == 0 ) {
+          
+         // return
+        //}
         for (const [k,v] of vtEventsMap.entries() ) {
-          let x=new Map()
-          x.set(k,[v])
-          this.vt.set(name,x)
+          let x=[]
+          if ( this.vt.get(name).has(k) ) {
+            x=this.vt.get(name).get(k)
+          }
+          x.push(v)
+          this.vt.get(name).set(k,x)
         }
       }
     }

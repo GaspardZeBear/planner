@@ -10,7 +10,7 @@ class RruleParser {
   
   //---------------------------------------------------------------------------------------------------------------------------------------------
   dailyRrule(rruleBody) {
-    this.fake()
+    //this.fake()
     let type
     let start=DateUtil.icsDateConvert(this.event["DTSTART"])
     let end=DateUtil.icsDateConvert(this.event["DTEND"])
@@ -18,7 +18,8 @@ class RruleParser {
     
     switch (t[0]) {
       case("COUNT") :
-        this.whens.push(DateUtil.getListOfDates(start,parseInt(t[1])))
+        let dList=DateUtil.getListOfDates(start,parseInt(t[1]))
+        this.whens.push(dList[0].substring(0,10) + "@" + dList[dList.length -1].substring(0,10))
         break;
       case("UNTIL") :
         this.whens.push(start + "@" + end )
