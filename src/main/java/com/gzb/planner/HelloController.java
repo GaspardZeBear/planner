@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
 	@GetMapping("/hello")
-	public String index() {
+	public String hello() {
 		return "Hi Gzb Greetings from Spring Boot!";
+	}
+	@GetMapping("/index")
+	public String index() {
+		return "index";
 	}
 
 }

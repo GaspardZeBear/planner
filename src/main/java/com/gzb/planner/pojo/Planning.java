@@ -16,6 +16,7 @@ public class Planning {
     this.stylesList=stylesList;
   }
 
+  //--------------------------------------------------------------------------------------------
   public String toJson() {
     JSONArray items=new JSONArray();
     HashMap<String,JSONObject> objsMap = new HashMap<String,JSONObject>();

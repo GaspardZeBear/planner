@@ -1,51 +1,3 @@
-
-
-
-function keepThisDay(when) {  
-  testIt=document.getElementById("weekend").value
-  //console.log("keepThisDay() testIt  " + testIt);
-  if ( CTX._weekend ) {
-    return(true)
-  }
-  dayOfWeek=new Date(when.substring(0,10)).getDay()
-  //console.log("keepThisDay() when  " + when + " dayOfWeek " + dayOfWeek.toString());
-  if ( dayOfWeek == 0 || dayOfWeek == 6) {
-    return(false)
-  } else {
-    return(true)
-  }
-} 
-
-//-------------------------------------------------------------------------------------------------------
-function fillDetailsTable(datas) {
-    for (line in CTX.getVirtualTable()) {
-      for (j in CTX.getVirtualTable()[line]) { 
-        k=CTX.getVirtualTable()[line][j];
-        if ( Object.keys(k).length > 0 && !(k["note"]=== undefined) && k["kind"].length > 0) {
-          let row = datas.insertRow();
-          row.insertCell().appendChild(document.createTextNode(line));
-          row.insertCell().appendChild(document.createTextNode(j));
-          let cell=row.insertCell();
-          cell.appendChild(document.createTextNode(k["kind"]));
-          cell.setAttribute("id",getHrefFromEvent(line,k));
-          //console.log("fillDetailsTable(datas) k=" + JSON.stringify(k))
-
-          cell.classList.add(k["kind"]);
-          style=CTX._styles[k["kind"]]
-          cell.setAttribute("style" , style)
-          //cell.classList.add(CTX._styles[k["kind"]]);
-          
-          if ( "note" in k && k["note"].length > 0 ) {      
-            row.insertCell().appendChild(document.createTextNode(k["note"]));
-          } else {
-            row.insertCell().appendChild(document.createTextNode(""));
-          }
-          row.insertCell().appendChild(document.createTextNode(k["processing"]));
-        }
-     }
-  }
-}
-
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function initPublicHolidays(year) {
   for (let d of DateUtil.joursFeries(year)) {
@@ -77,9 +29,6 @@ function modifyDuration(duration) {
   document.getElementById("end").value=nd;
   CTX.setEnd(nd);
 }
-
-
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 function filterItems() {

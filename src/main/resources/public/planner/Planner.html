@@ -4,6 +4,7 @@
 <head>
 <title>HTML Planning</title>
 <meta charset="utf-8">
+<!-- link rel="stylesheet" href="../index.css" -->
 <link rel="stylesheet" href="Custom.css">
 
 <link rel="stylesheet" href="Planning.css">
@@ -19,18 +20,22 @@
 <script type="text/javascript" src="VirtualTable.js"></script>
 <script type="text/javascript" src="HtmlVt.js"></script>
 <script type="text/javascript" src="Util.js"></script>
+<script type="text/javascript" src="Ics.js"></script>
 
 <script>
 
+
+//============================================================================================
+// Excel section 
+//============================================================================================
 var xhttpFiles = new XMLHttpRequest();
 xhttpFiles.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-       
-       excelFiles = JSON.parse(xhttpFiles.responseText);
+       let excelFiles = JSON.parse(xhttpFiles.responseText);
        console.log("ExcelFiles : " + JSON.stringify(excelFiles))
        //buildExcelFilesList(excelFiles);
        Util.buildSelectBox("excelFiles",excelFiles,[
-        {"text":"Plan","action":buildPlanningFromExcelFile},
+        {"text":"ExcelPlan","action":buildPlanningFromExcelFile},
         ]
        );
        }
@@ -38,7 +43,7 @@ xhttpFiles.onreadystatechange = function() {
 xhttpFiles.open("GET", "/excellist", true);
 xhttpFiles.send();
 
-
+//-----------------------------------------------------------------------------------
 function buildPlanningFromExcelFile(excelFileName) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -52,11 +57,48 @@ function buildPlanningFromExcelFile(excelFileName) {
   xhttp.send();
 }
 
+
+//============================================================================================
+// ICS section 
+//============================================================================================
+
+//---------------------------------------------------------------------------------------------
+var icsHttpFiles = new XMLHttpRequest();
+icsHttpFiles.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       let icsFiles = JSON.parse(icsHttpFiles.responseText);
+       console.log("IcsFiles : " + JSON.stringify(icsFiles))
+       //buildExcelFilesList(excelFiles);
+       Util.buildSelectBox("icsFiles",icsFiles,[
+        {"text":"IcsPlan","action":buildPlanningFromIcsFile},
+        ]
+       );
+       }
+};
+icsHttpFiles.open("GET", "/explore/icslist", true);
+icsHttpFiles.send();
+
+//-----------------------------------------------------------------------------------
+function buildPlanningFromIcsFile(icsFileName) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+       console.log("ICS loaded : " + xhttp.responseText)
+       icsStr = JSON.parse(xhttp.responseText);
+       let ics=new Ics(icsStr)
+    }
+  };
+  xhttp.open("GET", "/download/ical/dummy/gzb.ics", true);
+  xhttp.send();
+}
+
 </script>
 
 <body>
     <h2>Choose Excel planning file</h2>
     <div id="excelFiles">
+    </div>
+    <div id="icsFiles">
     </div>
 
     <h2>Work on selected planning</h2>

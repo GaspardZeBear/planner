@@ -51,6 +51,19 @@ public class DownloadController {
         Files.copy(file, response.getOutputStream());
     }
 
+    @GetMapping("/ical/{path}/{icalFile}")
+    public void downloadIcs (HttpServletRequest request, HttpServletResponse response,@PathVariable String path,@PathVariable String icsFile) throws IOException {
+        
+        // The file to be downloaded.
+        //Path file = Paths.get(path+"/"+pdfFile);
+        // Usin path maybe dangerous !!!!
+        System.out.println("ics file  " + icsFile);
+        Path file = Paths.get("planner/../"+icsFile);
+        response.setContentType("text/plain");
+        response.setContentLengthLong(Files.size(file));
+        Files.copy(file, response.getOutputStream());
+    }
+
     @GetMapping("/zip")
     public void zipDownload (HttpServletRequest request, HttpServletResponse response) throws IOException {
         
@@ -58,6 +71,7 @@ public class DownloadController {
         //List<Path> files = Arrays.asList(Paths.get("E:\\test.mp4"), 
         //                            Paths.get("E:\\node.txt"), 
         //                            Paths.get("E:\\keys.txt"));
+
         PdfFiles xf=new PdfFiles("splitter/generated/");
         //ArrayList<String> afiles=xf.getPdfFiles();
         List<Path> files=xf.getPdfFiles().stream().map(x->Paths.get(x)).collect(Collectors.toList());
