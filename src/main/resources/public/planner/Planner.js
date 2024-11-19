@@ -203,7 +203,7 @@ function createPage(myPlanning,myStyles) {
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
-function buildExcelFilesList(filesList) {
+function XbuildExcelFilesList(filesList) {
   console.log("excelFiles " + JSON.stringify(filesList))
   var excelFilesList = document.createElement("select");
   excelFilesList.id="excelFiles";

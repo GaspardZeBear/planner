@@ -30,7 +30,7 @@ function buildPdfList() {
     if (this.readyState == 4 && this.status == 200) {
        pdfFiles = JSON.parse(xhttpFiles.responseText);
        console.log("pdfFiles : " + JSON.stringify(pdfFiles))
-       Util.buildFilesList("pdfFiles",pdfFiles,[
+       Util.buildSelectBox("pdfFiles",pdfFiles,[
         {"text":"Split","action":splitPdfFile},
         {"text":"Delete","action":deletePdfFile}]
        );

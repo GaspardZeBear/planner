@@ -2,7 +2,7 @@ class Util {
  
   
 //---------------------------------------------------------------------------------------------------------------------------------------------
-static buildFilesList(selector,pFilesList,actions) {
+static buildSelectBox(selector,pFilesList,actions) {
   console.log("fFiles " + JSON.stringify(pFilesList))
   
   //cleanup all the div

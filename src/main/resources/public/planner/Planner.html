@@ -19,6 +19,7 @@
 <script type="text/javascript" src="VtEvent.js"></script>
 <script type="text/javascript" src="VirtualTable.js"></script>
 <script type="text/javascript" src="HtmlVt.js"></script>
+<script type="text/javascript" src="Util.js"></script>
 
 <script>
 
@@ -28,7 +29,11 @@ xhttpFiles.onreadystatechange = function() {
        
        excelFiles = JSON.parse(xhttpFiles.responseText);
        console.log("ExcelFiles : " + JSON.stringify(excelFiles))
-       buildExcelFilesList(excelFiles);
+       //buildExcelFilesList(excelFiles);
+       Util.buildSelectBox("excelFiles",excelFiles,[
+        {"text":"Plan","action":buildPlanningFromExcelFile},
+        ]
+       );
        }
 };
 //http.open("GET", "Planning.txt", true);
