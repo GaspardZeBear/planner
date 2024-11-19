@@ -11,7 +11,6 @@
 
 
 <link rel="stylesheet" href="tootik.min.css">
-<!-- script type="text/javascript" src="Planning.js"></script> -->
 <script type="text/javascript" src="DateUtil.js"></script>
 <script type="text/javascript" src="Planner.js"></script>
 
@@ -36,7 +35,6 @@ xhttpFiles.onreadystatechange = function() {
        );
        }
 };
-//http.open("GET", "Planning.txt", true);
 xhttpFiles.open("GET", "/excellist", true);
 xhttpFiles.send();
 
@@ -50,14 +48,9 @@ function buildPlanningFromExcelFile(excelFileName) {
        createPage(myPlanning["Planning"],myPlanning["Styles"]);
     }
   };
-  //http.open("GET", "Planning.txt", true);
-  //xhttp.open("GET", "/excelreader/Sample.xlsx", true);
   xhttp.open("GET", "/excelreader/"+excelFileName, true);
   xhttp.send();
 }
-
-//console.log("CTX " + JSON.stringify(CTX))
-//---------------------------------------------------------------------------------------------------------------------------------------------
 
 </script>
 
@@ -85,50 +78,40 @@ function buildPlanningFromExcelFile(excelFileName) {
 
         <div class="xradio-toolbar">
           <button type="button" onclick='modifyStartDate(-28);createPage(myPlanning["Planning"],myPlanning["Styles"])'/>
-            <label>-28d/4w</label>
+            <label>-28d</label>
           <button type="button" onclick='modifyStartDate(-14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
-            <label>-14d/2w</label>
+            <label>-14d</label>
           <button type="button" onclick='modifyStartDate(-7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
-            <label>-7d/1w</label>
+            <label>-7d</label>
           <button type="button"  onclick='modifyStartDate(-1);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>-1d</label>
           <button type="button"  onclick='modifyStartDate(1);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
             <label>+1d</label>
           <button type="button"  onclick='modifyStartDate(7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
-            <label>+7d/1w</label>
+            <label>+7d</label>
           <button type="button"  onclick='modifyStartDate(+14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
-            <label>+14d/2w</label>
+            <label>+14d</label>
           <button type="button"  onclick='modifyStartDate(+28);createPage(myPlanning["Planning"],myPlanning["Styles"])'>
-            <label>+28d/4w</label>
+            <label>+28d</label>
         </div>
         
-        <button type="button" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>7/1w</button>
-        <button type="button" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>14/2w</button>
-        <button type="button" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Styles"])'>21/3w</button>
-        <button type="button" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Styles"])'>28/1m</button>
-        <button type="button" onclick='modifyDuration(56);createPage(myPlanning["Planning"],myPlanning["Styles"])'>56/2m</button>
-        <button type="button" onclick='modifyDuration(84);createPage(myPlanning["Planning"],myPlanning["Styles"])'>84/3m</button>
+        <button type="button" onclick='modifyDuration(7);createPage(myPlanning["Planning"],myPlanning["Styles"])'>7d</button>
+        <button type="button" onclick='modifyDuration(14);createPage(myPlanning["Planning"],myPlanning["Styles"])'>14d</button>
+        <button type="button" onclick='modifyDuration(21);createPage(myPlanning["Planning"],myPlanning["Styles"])'>21d</button>
+        <button type="button" onclick='modifyDuration(28);createPage(myPlanning["Planning"],myPlanning["Styles"])'>28d</button>
+        <button type="button" onclick='modifyDuration(56);createPage(myPlanning["Planning"],myPlanning["Styles"])'>56d</button>
+        <button type="button" onclick='modifyDuration(84);createPage(myPlanning["Planning"],myPlanning["Styles"])'>84d</button>
      
         
     <h2>Planning</h2>
 
     <input type="text" id="lineFilter" onkeyup="filterItems()" placeholder="Search for items ..">
-    Hint : !xxx to negate, !\+ to compact
+    Hint : !xxx to negate
     <br/>
     <div class="freezeTable">
     <table id="planning">
     </table>
     </div>
 
-    <br/>
-    <br/>
-    <div class="freezeTable">
-      <table id="planningN">
-      </table>
-    </div>
-
-    <h2>Details</h2>
-    <table id="details">
-    </table>
 </body>
 </html>

@@ -124,13 +124,13 @@ class HtmlVt {
     }
     cell.setAttribute("style" , style)
     cell.classList.add(vtEvent.getKind());
-    let details=document.createElement('details')
-	  let p=document.createElement('p')
-	  p.append("balbala")
-	  let summary=document.createElement('summary')
-	  summary.append(text)
-	  details.append(p)
-	  details.append(summary)
+    //let details=document.createElement('details')
+	  //let p=document.createElement('p')
+	  //p.append("balbala")
+	  //let summary=document.createElement('summary')
+	  //summary.append(text)
+	  //details.append(p)
+	  //details.append(summary)
     //cell.appendChild(details);
     content.href="#"+this.getHrefFromEvent(line,vtEvent.getWhen());
     content.append(text);
