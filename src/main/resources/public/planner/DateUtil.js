@@ -68,6 +68,17 @@ class DateUtil {
   }
 
   //-------------------------------------------------------------------------------------------------------
+  static isWeekend(when) {  
+    let dayOfWeek=new Date(when.substring(0,10)).getDay()
+    if ( dayOfWeek == 0 || dayOfWeek == 6) {
+      return(true)
+    } else {
+      return(false)
+    }
+  } 
+
+
+  //-------------------------------------------------------------------------------------------------------
   static  isWhenInStartEnd(when,start,end) {
   //console.log("isWhenInStartEnd() when  " + when + " compared to " + DateUtil.date2String(start) + " " + DateUtil.date2String(end))
     if ( when < DateUtil.date2String(start) ) {

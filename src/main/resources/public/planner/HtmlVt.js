@@ -5,8 +5,21 @@ class HtmlVt {
   #end
   #days
   #styles
+  #weekend
 
-  constructor(start,end,table,virtualTable,styles) {
+  constructor(p) {
+    this.start=p.start
+    this.end=p.end
+    this.table=p.table
+    this.vt=p.virtualTable
+    this.weekend=p.weekend
+    this.styles=p.styles
+    this.days=[]
+    this.createDaysList()
+    this.createTable()
+  }
+
+  Xconstructor(start,end,table,virtualTable,styles) {
     this.start=start
     this.end=end
     this.table=table
@@ -15,7 +28,6 @@ class HtmlVt {
     this.styles=styles
     this.createDaysList()
     this.createTable()
-   
   }
 
   //---------------------------------------------------------------------------------
@@ -84,10 +96,8 @@ class HtmlVt {
 
   //-------------------------------------------------------------------------------------------------------
   getHrefFromEvent(line,when) {
-  
     return(line+"_"+when);
   }
-
 
   //-------------------------------------------------------------------------------------------------------
   generateTd(line,row, vtEvent, col, clazz) {
@@ -159,6 +169,10 @@ class HtmlVt {
           clazz="today"
         } else {
           clazz="d" + DateUtil.dayOfWeek(d).toString()
+        }
+        if (this.weekend && DateUtil.isWeekend(d) ) {
+          this.generateTd(line,row,null,3,clazz);
+          continue
         }
         if ( this.vt.get(line).has(d) ) {
           if (this.vt.get(line).get(d).length > 1 ) {

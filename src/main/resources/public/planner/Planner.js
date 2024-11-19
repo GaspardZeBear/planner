@@ -196,41 +196,19 @@ function createPage(myPlanning,myStyles) {
 
   var table=document.querySelector("#planning");
   table.innerHTML=""
-  new HtmlVt(CTX.getStart(),CTX.getEnd(),table,vt.getVirtualTable(),CTX._styles)
-  
-  var datas = document.querySelector("#details");
-  //fillDetailsTable(datas) ;
+  let HtParms={
+    "start":CTX.getStart(),
+    "end":CTX.getEnd(),
+    "table":table,
+    "virtualTable":vt.getVirtualTable(),
+    "styles":CTX._styles,
+    "weekend":CTX._weekend
+  }
+  //new HtmlVt(CTX.getStart(),CTX.getEnd(),table,vt.getVirtualTable(),CTX._styles)
+  new HtmlVt(HtParms)
+
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------------
-function XbuildExcelFilesList(filesList) {
-  console.log("excelFiles " + JSON.stringify(filesList))
-  var excelFilesList = document.createElement("select");
-  excelFilesList.id="excelFiles";
-  document.querySelector("#excelFiles").appendChild(excelFilesList)
-  let selected = false
-  var option=document.createElement("option")
-  option.value=""
-  option.text=""
-  option.selected=selected
-  selected=false
-  excelFilesList.appendChild(option)
-  for ( xfile of filesList.sort() ){
-    console.log(" File " + xfile)
-    var option=document.createElement("option")
-    option.value=xfile
-    option.text=xfile
-    option.selected=selected
-    selected=false
-    excelFilesList.appendChild(option)
-  }
-  document.querySelector("#excelFiles").addEventListener('change', function (e) { 
-    console.log("File selected" + e.target.value)
-    if ( e.target.value.length > 0 ) {
-      buildPlanningFromExcelFile(e.target.value)
-    }
-   },true);
-}
 //--------------------------------------------------------------------------------------------------------------------------------------
 //-- Main ----------------
 //--------------------------------------------------------------------------------------------------------------------------------------
