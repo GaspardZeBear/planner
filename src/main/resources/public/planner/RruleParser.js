@@ -13,15 +13,17 @@ class RruleParser {
     //this.fake()
     let type
     let start=DateUtil.icsDateConvert(this.event["DTSTART"])
-    let end=DateUtil.icsDateConvert(this.event["DTEND"])
+    let end
     let t=rruleBody.split("=")
     
     switch (t[0]) {
       case("COUNT") :
+        end=DateUtil.icsDateConvert(this.event["DTEND"])
         let dList=DateUtil.getListOfDates(start,parseInt(t[1]))
         this.whens.push(dList[0].substring(0,10) + "@" + dList[dList.length -1].substring(0,10))
         break;
       case("UNTIL") :
+        end=DateUtil.icsDateConvert(t[1])
         this.whens.push(start + "@" + end )
         break
       default :

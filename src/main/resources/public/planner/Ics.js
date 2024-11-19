@@ -76,8 +76,8 @@ ics2json() {
     for (let event of this.icsEvents ) {
       let t=event["SUMMARY"].split(".")
       let name=t[0].trim()
-      if ( !this.planningMap.hasOwnProperty(name) ) {
-        this.planningMap.set(name,[])
+      if ( !this.planningMap.has(name) ) {
+        this.planningMap.set(name,new Array())
       }
       let kind=name
       if ( t.length > 1 ) {
@@ -86,6 +86,7 @@ ics2json() {
       // temporary !!!! 
       let rruleParser=new RruleParser(event)
       let whens=rruleParser.getWhens()
+      
       for (let when of whens) {
         let vtEvent=new VtEvent(kind,when,event["SUMMARY"])
         this.planningMap.get(name).push(vtEvent)
