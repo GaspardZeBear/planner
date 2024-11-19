@@ -16,25 +16,7 @@ static buildSelectBox(selector,pFilesList,actions) {
   selectedItem.id=selector+"Selected"
   document.querySelector("#" + selector).appendChild(selectedItem)
 
-  // Create the action buttons and associated listener
-  console.log("Buttons creation ") 
-  for (let action of actions) {
-    console.log("Button creation " + action["text"]) 
-    var button=document.createElement("Button")
-    button.textContent=action["text"]
-    button.id=selector+"Button"+action["text"]
-    console.log("Button created " + action["text"]) 
-    document.querySelector("#" + selector).appendChild(button)
-    document.querySelector("#" + selector + "Button" +action["text"]).addEventListener('click', function (e) {
-        console.log("Button hit " + action["text"]) 
-        let sel=document.getElementById(selector + "Selected")
-        if ( sel.value == null ) {
-          return
-        }
-        action["action"](sel.value)
-    },true)
-  }
-  console.log("Buttons created ") 
+  
 
   // build select box
   console.log(" Building select box")
@@ -59,6 +41,26 @@ static buildSelectBox(selector,pFilesList,actions) {
   document.querySelector("#" + selector).appendChild(filesList)
   console.log(" Select box built")
 
+  // Create the action buttons and associated listener
+  console.log("Buttons creation ") 
+  for (let action of actions) {
+    console.log("Button creation " + action["text"]) 
+    var button=document.createElement("Button")
+    button.textContent=action["text"]
+    button.id=selector+"Button"+action["text"]
+    console.log("Button created " + action["text"]) 
+    document.querySelector("#" + selector).appendChild(button)
+    document.querySelector("#" + selector + "Button" +action["text"]).addEventListener('click', function (e) {
+        console.log("Button hit " + action["text"]) 
+        let sel=document.getElementById(selector + "Selected")
+        if ( sel.value == null ) {
+          return
+        }
+        action["action"](sel.value)
+    },true)
+  }
+  console.log("Buttons created ") 
+  
   // Add select box listeners
   document.querySelector("#" + selector + "Select").addEventListener('change', function (e) { 
       console.log("File selected change " + e.target.value)
