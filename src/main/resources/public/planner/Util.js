@@ -22,6 +22,7 @@ class Util {
     console.log(" Building select box")
     var filesList = document.createElement("select");
     filesList.id=selector+"Select";
+    filesList.className="buildSelectBox";
     let selected = false
     var option=document.createElement("option")
     option.value=""
