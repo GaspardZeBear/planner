@@ -70,9 +70,10 @@ ics2json() {
 
   //---------------------------------------------------------------------------------------------------------------------------------------------
   simplifyEvents() {  
+    let keysToKeep=["SUMMARY","DTSTART","DTEND","DTSTAMP","RRULE","DESCRIPTION","LOCATION"]
     for (let event of this.icsJson ) {
       let sEvent={}
-      for (let p of ["SUMMARY","DTSTART","DTEND","DTSTAMP","RRULE","DESCRIPTION"]) {
+      for (let p of keysToKeep) {
         sEvent[p]=this.getEventParameter(event,p)
       }
       this.icsEvents.push(sEvent)
@@ -99,7 +100,8 @@ ics2json() {
       let whens=rruleParser.getWhens()
       
       for (let when of whens) {
-        let vtEvent=new VtEvent(kind,when,event["SUMMARY"])
+        let note=event["SUMMARY"] + "," +event["DESCRIPTION"] + "," + event["LOCATION"]
+        let vtEvent=new VtEvent(kind,when,note)
         this.planningMap.get(name).push(vtEvent)
       }
     }

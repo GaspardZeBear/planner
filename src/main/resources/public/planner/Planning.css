@@ -180,6 +180,11 @@ th, td {
   background-color: #dfd;
 }
 
+.buildSelectBox {
+  background-color: beige;
+  width:30%;
+}
+
 
 
 </style>
