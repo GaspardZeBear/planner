@@ -77,23 +77,49 @@ class DateUtil {
     }
   } 
 
+  //---------------------------------------------------------------------------------------------------------------------------------------------
+  static buildDaysOnSet(byday) {
+    let s=new Set()
+    if (byday == null) {
+      return(s)
+    }
+    let alias0= {"SU":0,"MO":1,"TU":2,"WE":3,"TH":4,"FR":5,"SA":6,
+                "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,
+                "DI":0,"LU":1,"MA":2,"ME":3,"JE":4,"VE":5,"SA":6,
+    }
+    let days=byday.split(",")
+    for (let d of days) {
+      s.add(alias0[d]) 
+    }
+    return(s)
+  }
+    
   //-------------------------------------------------------------------------------------------------------
-  static getListOfDates(start,count) { 
+  static getListOfDates(start,count,daysOn) { 
     let nstart=new Date(start.substring(0,10));
     let loop = new Date(nstart);
     let dates=[];
     for (let i=0;i<count;i++) {
-      let day=DateUtil.date2day(loop);
-      dates.push(day+"M");
-      dates.push(day+"A");
+      let dow=loop.getDay()
+      let push=true
+      if (daysOn != null) {
+        if ( daysOn.size > 0 ) {
+          if ( !daysOn.has(dow) ) {
+            push=false
+          }
+        }
+      }
+      if (push) {
+        let day=DateUtil.date2day(loop);
+        dates.push(day+"M");
+        dates.push(day+"A");
+      }
       let newDate = loop.setDate(loop.getDate() + 1);
       loop = new Date(newDate);
     }
     return(dates)
   } 
 
-
-  
   //-------------------------------------------------------------------------------------------------------
   static  icsDateConvert(date) {
     return(date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(5,7))

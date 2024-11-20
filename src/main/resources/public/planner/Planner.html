@@ -88,8 +88,8 @@ function buildPlanningFromIcsFile(icsFileName) {
        icsStr = xhttp.responseText;
        let ics=new Ics(icsStr)
        myPlanning["Planning"] = ics.getPlanning()
-       myPlanning["Styles"] = {}
-       createPage(myPlanning["Planning"],{});
+       myPlanning["Styles"] = {"GesDP":"Background-color:red ;background: radial-gradient(red, yellow);opacity:1"}
+       createPage(myPlanning["Planning"],myPlanning["Styles"]);
     }
   };
   xhttp.open("GET", "/download/ical/dummy/" + icsFileName, true);

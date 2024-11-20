@@ -21,7 +21,7 @@ class VirtualTable {
 
   //-----------------------------------------------------------------------------------------
   list(items) {
-    console.log(JSON.stringify(items))
+    //console.log(JSON.stringify(items))
     for (let item of items) {
       this.info(JSON.stringify(item))
     }
@@ -45,7 +45,7 @@ class VirtualTable {
  //-----------------------------------------------------------------------------------------
   showInfo() {
     for (let info of this.infos) {
-      console.log(info)
+      //console.log(info)
     }
   }
   

@@ -84,6 +84,8 @@ ics2json() {
         kind=t[1]
       }
       // temporary !!!! 
+      console.log(" Event" + JSON.stringify(event))
+
       let rruleParser=new RruleParser(event)
       let whens=rruleParser.getWhens()
       
