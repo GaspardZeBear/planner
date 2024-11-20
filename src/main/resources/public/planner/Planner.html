@@ -88,11 +88,19 @@ function buildPlanningFromIcsFile(icsFileName) {
        icsStr = xhttp.responseText;
        let ics=new Ics(icsStr)
        myPlanning["Planning"] = ics.getPlanning()
-       myPlanning["Styles"] = {"GesDP":"Background-color:red ;background: radial-gradient(red, yellow);opacity:1"}
+       //myPlanning["Styles"] = {"GesDP":"Background-color:red ;background: radial-gradient(red, yellow);opacity:1"}
        createPage(myPlanning["Planning"],myPlanning["Styles"]);
     }
   };
+  const request = new XMLHttpRequest();
+  request.open("GET", "/download/ical/dummy/IcsStyles.json", false); // `false` makes the request synchronous
+  request.send(null);
+  if (request.status === 200) {
+    myPlanning["Styles"]=JSON.parse(request.responseText);
+  }
+
   xhttp.open("GET", "/download/ical/dummy/" + icsFileName, true);
+  //http://localhost:8080/download/ical/dummy/IcsStyles.json
   xhttp.send();
 }
 
