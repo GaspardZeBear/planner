@@ -27,16 +27,16 @@ class RruleParser {
     return(daysOn)
   }
 
-
    //-------------------------------------------------------------------------------------------------------------------------------------
    pushToWhens(start,count,daysOn) {
-     let dList=DateUtil.getListOfDates(start,count,daysOn)
-     for (let d of dList) {
+    let starthh=this.event["DTSTART"].substr(9,6)
+    let endhh=this.event["DTEND"].substr(9,6)
+    let dList=DateUtil.getListOfDates(start,starthh,endhh,count,daysOn)
+    for (let d of dList) {
        this.whens.push(d)
-     }
+    }
    }
   
-
   //---------------------------------------------------------------------------------------------------------------------------------------------
   dailyRrule(rruleMap) {
     //this.fake()
@@ -55,9 +55,7 @@ class RruleParser {
       this.pushToWhens(start,count,daysOn)
       console.log("Unknown RRULE freq " + rruleMap)
     }
-
   }
-
 
   //----------------------------------------------------------------------------------------------------------------------------------------------
   //Event{"SUMMARY":"Natation.Crawl","DTSTART":"20241125T120000","DTEND":"20241125T140000","DTSTAMP":"20241122T063801Z",

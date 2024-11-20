@@ -95,8 +95,15 @@ class DateUtil {
   }
     
   //-------------------------------------------------------------------------------------------------------
-  static getListOfDates(start,count,daysOn) { 
+  static getListOfDates(start,starthh,endhh,count,daysOn) { 
     let nstart=new Date(start.substring(0,10));
+    let suffixes=[]
+    if ( starthh < '120000' ) {
+      suffixes.push("M")
+    }
+    if ( endhh > '120000' ) {
+      suffixes.push('A')
+    }
     let loop = new Date(nstart);
     let dates=[];
     for (let i=0;i<count;i++) {
@@ -111,8 +118,9 @@ class DateUtil {
       }
       if (push) {
         let day=DateUtil.date2day(loop);
-        dates.push(day+"M");
-        dates.push(day+"A");
+        for (let suffix of suffixes) {
+          dates.push(day+suffix);
+        }
       }
       let newDate = loop.setDate(loop.getDate() + 1);
       loop = new Date(newDate);
