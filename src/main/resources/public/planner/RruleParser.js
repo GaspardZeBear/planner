@@ -8,46 +8,56 @@ class RruleParser {
     this.rrule2whens()
   }
 
-  //---------------------------------------------------------------------------------------------------------------------------------------------
-  buildDaysOffSet(byday) {
-  }
   
+  //-------------------------------------------------------------------------------------------------------------------------------------
+  getCount(count) {
+    let maxCount=90
+    if ( count > maxCount ) {
+      return(maxCount)
+    }
+    return(count)
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------
+  getDaysOn(rruleMap) {
+    let daysOn=new Set()
+    if ( rruleMap.has("BYDAY") ) {
+      daysOn=DateUtil.buildDaysOnSet(rruleMap.get("BYDAY"))
+    }
+    return(daysOn)
+  }
+
+
+   //-------------------------------------------------------------------------------------------------------------------------------------
+   pushToWhens(start,count,daysOn) {
+     let dList=DateUtil.getListOfDates(start,count,daysOn)
+     for (let d of dList) {
+       this.whens.push(d)
+     }
+   }
+  
+
   //---------------------------------------------------------------------------------------------------------------------------------------------
   dailyRrule(rruleMap) {
     //this.fake()
     console.log("DAILY " + rruleMap)
     //let type
     let start=DateUtil.icsDateConvert(this.event["DTSTART"])
-    let end
-    let maxCount=90
-    let daysOn=new Set()
-    if ( rruleMap.has("BYDAY") ) {
-      daysOn=DateUtil.buildDaysOnSet(rruleMap.get("BYDAY"))
-    }
-
+    let daysOn=this.getDaysOn(rruleMap)
     if ( rruleMap.has("COUNT") ) {
-        //end=DateUtil.icsDateConvert(this.event["DTEND"])
-        let count=parseInt(rruleMap.get("COUNT"))
-        if ( count > maxCount ) {
-          count=90
-        }
-        let dList=DateUtil.getListOfDates(start,count,daysOn)
-        for (let d of dList) {
-          this.whens.push(d)
-        }
+        let count=this.getCount(parseInt(rruleMap.get("COUNT")))
+        this.pushToWhens(start,count,daysOn)
     } else if (rruleMap.has("UNTIL")) {
-        end=DateUtil.icsDateConvert(rruleMap.get("UNTIL"))
+        let end=DateUtil.icsDateConvert(rruleMap.get("UNTIL"))
         this.whens.push(start + "@" + end )
     } else {
-       //end=DateUtil.icsDateConvert(this.event["DTEND"])
-       let dList=DateUtil.getListOfDates(start,maxCount,daysOn)
-       for (let d of dList) {
-        this.whens.push(d)
-       }
-       console.log("Unknown RRULE freq " + rruleMap)
+      let count=this.getCount(999)
+      this.pushToWhens(start,count,daysOn)
+      console.log("Unknown RRULE freq " + rruleMap)
     }
 
   }
+
 
   //----------------------------------------------------------------------------------------------------------------------------------------------
   //Event{"SUMMARY":"Natation.Crawl","DTSTART":"20241125T120000","DTEND":"20241125T140000","DTSTAMP":"20241122T063801Z",
@@ -59,30 +69,16 @@ class RruleParser {
   weeklyRrule(rruleMap) {
     this.fake()
     console.log("WEEKLY " + rruleMap)
-    let maxCount=90
     let start=DateUtil.icsDateConvert(this.event["DTSTART"])
-    let daysOn=new Set()
-    if ( rruleMap.has("BYDAY") ) {
-      daysOn=DateUtil.buildDaysOnSet(rruleMap.get("BYDAY"))
-    }
-
-    let end
+    let daysOn=this.getDaysOn(rruleMap)
     if ( rruleMap.has("COUNT") ) {
       //end=DateUtil.icsDateConvert(this.event["DTEND"])
-      let count=parseInt(rruleMap.get("COUNT"))*7
-      if ( count > maxCount ) {
-        count=maxCount
-      }
-      let dList=DateUtil.getListOfDates(start,count,daysOn)
-      for (let d of dList) {
-        this.whens.push(d)
-      }
+      let count=this.getCount(parseInt(rruleMap.get("COUNT")))*7
+      this.pushToWhens(start,count,daysOn)
     } else {
        //end=DateUtil.icsDateConvert(this.event["DTEND"])
-       let dList=DateUtil.getListOfDates(start,maxCount,daysOn)
-       for (let d of dList) {
-         this.whens.push(d)
-       }
+       let count=this.getCount(999)
+       this.pushToWhens(start,count,daysOn)
        console.log("Unknown RRULE " + rruleMap)
     }
   }
@@ -95,29 +91,12 @@ class RruleParser {
 
   //----------------------------------------------------------------------------------------------------------------------------------------------
   fake() {
-    this.whens.push(DateUtil.icsDateConvert(this.event["DTSTART"]) + "@" + DateUtil.icsDateConvert(this.event["DTEND"]))
+    //this.whens.push(DateUtil.icsDateConvert(this.event["DTSTART"]) + "@" + DateUtil.icsDateConvert(this.event["DTEND"]))
   }
   
   //----------------------------------------------------------------------------------------------------------------------------------------------
   getWhens() {
     return(this.whens)
-  }
-
-  //----------------------------------------------------------------------------------------------------------------------------------------------
-  XgetFreq(rrule) {
-    
-    const match = /FREQ=(.*);(.*)$/.exec(rrule);
-    if (! match) { 
-      console.log(" RRULE bad pattern : FREQ=DAILY;xxxx" )
-      return
-    } 
-    console.log("Match " +JSON.stringify(match))
-    const [, _freq, freq,body] = match;
-    if (_freq != "FREQ") {
-      console.log("No 'FREQ' <" + _freq + "> " + match) 
-      return
-    }  
-    return(freq)
   }
 
   //----------------------------------------------------------------------------------------------------------------------------------------------
