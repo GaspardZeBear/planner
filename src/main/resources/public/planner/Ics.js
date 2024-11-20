@@ -32,13 +32,22 @@ ics2json() {
    const lines = this.icsStr.split('\n');
    const events = []; 
    let event; 
+   let ignore=false
    for (let i = 0; i < lines.length; i++) { 
      const line = lines[i].trim(); 
      if (line === 'BEGIN:VEVENT') { 
       event = {}; 
      } else if (line === 'END:VEVENT') { 
       events.push(event);
+      ignore=false
      } else if (event) {
+       // VALARM for example may be included in VEVENT .. skip
+       if (line.startsWith("BEGIN") ) {
+        ignore=true
+       } 
+       if (ignore) {
+        continue
+       }
        const match = /(.*):(.*)$/.exec(line); 
        if (match) { 
          const [, key, value] = match; 
